@@ -1,11 +1,11 @@
-package uz.crm.crmbackend.entity.user;
+package uz.crm.crmbackend.entity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
-import uz.crm.crmbackend.entity.BaseEntity;
-import uz.crm.crmbackend.entity.BaseEntityId;
+import uz.crm.crmbackend.entity.baseEntities.BaseEntity;
+import uz.crm.crmbackend.entity.baseEntities.BaseEntityId;
 
 import javax.persistence.Entity;
 

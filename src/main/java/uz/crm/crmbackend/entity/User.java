@@ -1,4 +1,4 @@
-package uz.crm.crmbackend.entity.user;
+package uz.crm.crmbackend.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,13 +6,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import uz.crm.crmbackend.entity.BaseEntity;
-import uz.crm.crmbackend.entity.BaseEntityId;
+import uz.crm.crmbackend.entity.baseEntities.BaseEntity;
+import uz.crm.crmbackend.entity.baseEntities.BaseEntityId;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
+import javax.persistence.*;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @Setter
@@ -28,12 +27,19 @@ public class User extends BaseEntityId implements UserDetails, BaseEntity {
     private String lastName;
 
     @Column(nullable = false)
+    private String fatherName;
+
+    @Column(nullable = false)
+    private String passportSerialNumber;
+
+    @Column(nullable = false)
     private String username;
 
     @Column(nullable = false)
     private String password;
 
-    private Double balance;
+    @OneToMany
+    private List<File> file;
 
     private Boolean isDeleted = false;
     @ManyToMany

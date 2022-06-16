@@ -10,8 +10,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uz.crm.crmbackend.dto.auth.RegisterDto;
-import uz.crm.crmbackend.entity.user.User;
-import uz.crm.crmbackend.entity.user.UserRole;
+import uz.crm.crmbackend.entity.User;
+import uz.crm.crmbackend.entity.UserRole;
 import uz.crm.crmbackend.repository.user.RoleRepo;
 import uz.crm.crmbackend.repository.user.UserRepo;
 import uz.crm.crmbackend.service.BaseService;
@@ -38,7 +38,6 @@ public class AuthService implements UserDetailsService , BaseService {
             Set<UserRole> userRoles = new HashSet<>();
             UserRole userRole = roleRepo.findByNameAndIsActive("USER",true).orElseThrow(() -> new UserRoleNotFoundException(user_role + " not found"));
             userRoles.add(userRole);
-            user.setBalance(registerDto.getBalance());
             user.setUsername(registerDto.getUsername());
             user.setFirstName(registerDto.getFirstName());
             user.setLastName(registerDto.getLastName());

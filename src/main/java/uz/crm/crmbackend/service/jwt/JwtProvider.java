@@ -3,7 +3,7 @@ package uz.crm.crmbackend.service.jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
-import uz.crm.crmbackend.entity.user.UserRole;
+import uz.crm.crmbackend.entity.UserRole;
 
 import java.util.Date;
 import java.util.Set;

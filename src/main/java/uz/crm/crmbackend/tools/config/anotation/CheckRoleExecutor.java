@@ -4,8 +4,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import uz.crm.crmbackend.entity.user.User;
-import uz.crm.crmbackend.entity.user.UserRole;
+import uz.crm.crmbackend.entity.User;
+import uz.crm.crmbackend.entity.UserRole;
 import uz.crm.crmbackend.tools.exceptions.ForbiddenException;
 
 @Component

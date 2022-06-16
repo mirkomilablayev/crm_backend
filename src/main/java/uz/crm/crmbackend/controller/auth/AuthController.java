@@ -11,7 +11,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 import uz.crm.crmbackend.dto.auth.LoginDto;
 import uz.crm.crmbackend.dto.auth.RegisterDto;
-import uz.crm.crmbackend.entity.user.User;
+import uz.crm.crmbackend.entity.User;
 import uz.crm.crmbackend.service.auth.AuthService;
 import uz.crm.crmbackend.service.jwt.JwtProvider;
 

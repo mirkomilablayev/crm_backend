@@ -1,4 +1,4 @@
-package uz.crm.crmbackend.entity;
+package uz.crm.crmbackend.entity.baseEntities;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

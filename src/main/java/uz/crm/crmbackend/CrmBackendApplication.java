@@ -25,7 +25,7 @@ public class CrmBackendApplication {
                         .allowedMethods("GET","POST","PATCH","PUT","DELETE")
                         .allowedHeaders("*")
                         .allowCredentials(true)
-                        .allowedOrigins("http://localhost:3000");
+                        .allowedOrigins("http://localhost:3000","http://localhost:8080");
             }
         };
     }

@@ -1,4 +1,4 @@
-package uz.crm.crmbackend.tools.config.anotation;
+package uz.crm.crmbackend.config.anotation;
 
 import java.lang.annotation.*;
 

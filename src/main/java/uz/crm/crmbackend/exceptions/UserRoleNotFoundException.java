@@ -1,4 +1,4 @@
-package uz.crm.crmbackend.tools.exceptions;
+package uz.crm.crmbackend.exceptions;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

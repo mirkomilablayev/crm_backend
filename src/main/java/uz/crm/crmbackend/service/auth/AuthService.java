@@ -12,12 +12,12 @@ import org.springframework.stereotype.Service;
 import uz.crm.crmbackend.dto.auth.RegisterDto;
 import uz.crm.crmbackend.entity.User;
 import uz.crm.crmbackend.entity.UserRole;
-import uz.crm.crmbackend.repository.user.RoleRepo;
-import uz.crm.crmbackend.repository.user.UserRepo;
+import uz.crm.crmbackend.repository.repositories.RoleRepo;
+import uz.crm.crmbackend.repository.repositories.UserRepo;
 import uz.crm.crmbackend.service.BaseService;
-import uz.crm.crmbackend.tools.exceptions.ResourceNotFoundException;
-import uz.crm.crmbackend.tools.exceptions.UserRoleNotFoundException;
-import uz.crm.crmbackend.tools.exceptions.UsernameAlreadyRegisterException;
+import uz.crm.crmbackend.exceptions.ResourceNotFoundException;
+import uz.crm.crmbackend.exceptions.UserRoleNotFoundException;
+import uz.crm.crmbackend.exceptions.UsernameAlreadyRegisterException;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -39,8 +39,8 @@ public class AuthService implements UserDetailsService , BaseService {
             UserRole userRole = roleRepo.findByNameAndIsActive("USER",true).orElseThrow(() -> new UserRoleNotFoundException(user_role + " not found"));
             userRoles.add(userRole);
             user.setUsername(registerDto.getUsername());
-            user.setFirstName(registerDto.getFirstName());
-            user.setLastName(registerDto.getLastName());
+            user.setFullName(registerDto.getFullName());
+
             user.setUserRoleSet(userRoles);
             return ResponseEntity.status(HttpStatus.OK).body(userRepo.save(user));
         }

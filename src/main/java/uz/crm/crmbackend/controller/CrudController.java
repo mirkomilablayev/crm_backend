@@ -4,15 +4,14 @@ import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import uz.crm.crmbackend.dto.Dto;
-import uz.crm.crmbackend.dto.UpDto;
 
 public interface CrudController<
         DTO extends Dto,
-        UpDto_ extends UpDto> {
+        UpDto extends Dto> {
 
      HttpEntity<?> create(@RequestBody DTO cd);
 
-     HttpEntity<?> update(@RequestBody UpDto_ cd);
+     HttpEntity<?> update(@RequestBody UpDto cd);
 
      HttpEntity<?> get(@PathVariable Long id);
 

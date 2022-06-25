@@ -5,6 +5,8 @@ import uz.crm.crmbackend.entity.baseEntities.BaseEntity;
 import uz.crm.crmbackend.entity.baseEntities.BaseEntityId;
 
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -13,11 +15,14 @@ import javax.persistence.Entity;
 @NoArgsConstructor
 @Entity(name = "edu_center")
 public class EduCenter extends BaseEntityId implements BaseEntity {
-    private String center_name;
-    private String address;
-    private String center_phone;
-    private String ceo_name;
-    private String ceo_tell;
-    private String center_stir;
+    private String edu_centerName;
+    private String centerPhone;
+    private String ceo_full_name;
+    private String ceoPhone;
+    private String centerStir;
+    private Boolean isArchived = false;
+    @ManyToOne
+    private CenterStatus centerStatus;
+    private LocalDateTime addedAt;
 
 }

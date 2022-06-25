@@ -1,4 +1,4 @@
-package uz.crm.crmbackend.tools.config;
+package uz.crm.crmbackend.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

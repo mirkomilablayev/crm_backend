@@ -1,4 +1,4 @@
-package uz.crm.crmbackend.repository.user;
+package uz.crm.crmbackend.repository.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import uz.crm.crmbackend.entity.UserRole;

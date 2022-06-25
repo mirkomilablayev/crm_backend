@@ -20,17 +20,13 @@ import java.util.Set;
 @NoArgsConstructor
 @Entity(name = "users")
 public class User extends BaseEntityId implements UserDetails, BaseEntity {
-    @Column(nullable = false)
-    private String firstName;
-
-    @Column(nullable = false)
-    private String lastName;
-
-    @Column(nullable = false)
-    private String fatherName;
-
-    @Column(nullable = false)
-    private String passportSerialNumber;
+    private String fullName;
+    private String passportSerialNum;
+    private String phoneNumber;
+    @ManyToMany
+    private List<EduCenter> eduCenter;
+    @OneToMany
+    private List<File> logoFile;
 
     @Column(nullable = false)
     private String username;

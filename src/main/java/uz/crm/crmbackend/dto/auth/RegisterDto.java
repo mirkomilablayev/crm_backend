@@ -10,9 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterDto {
-    private String firstName;
-    private String lastName;
-    private Double balance;
+    private String fullName;
     private String password;
     private String username;
 }

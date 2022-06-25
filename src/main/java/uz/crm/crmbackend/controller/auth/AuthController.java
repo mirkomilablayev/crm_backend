@@ -17,6 +17,7 @@ import uz.crm.crmbackend.service.jwt.JwtProvider;
 
 @RestController
 @RequestMapping("/api/auth")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;

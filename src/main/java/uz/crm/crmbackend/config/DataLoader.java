@@ -50,7 +50,8 @@ public class DataLoader implements CommandLineRunner {
             // this is super admin
             User admin = new User();
             admin.setFullName("Anonymous User");
-            admin.setUserRoleSet(new HashSet<>(List.of(roleRepo.findByNameAndIsActive(Constant.SUPER_ADMIN,true).orElseThrow(() ->
+            admin.setUserRoleSet(new HashSet<>(List.of(roleRepo.findByNameAndIsActive(Constant.SUPER_ADMIN,true)
+                    .orElseThrow(() ->
                     new UserRoleNotFoundException(Constant.SUPER_ADMIN+" role not found")))));
             admin.setUsername("1");
             admin.setPassword(passwordEncoder.encode("1"));

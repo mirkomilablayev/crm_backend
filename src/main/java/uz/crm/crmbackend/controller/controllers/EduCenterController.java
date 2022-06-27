@@ -7,13 +7,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uz.crm.crmbackend.controller.AbstractController;
 import uz.crm.crmbackend.controller.CrudController;
-import uz.crm.crmbackend.dto.eduCenter.EduCenterDto;
+import uz.crm.crmbackend.dto.eduCenter.EduCenDto;
 import uz.crm.crmbackend.entity.EduCenter;
 import uz.crm.crmbackend.service.services.EduCenterService;
 
 @RestController
 @RequestMapping("/api/eduCenter")
-public class EduCenterController extends AbstractController<EduCenterService> implements CrudController<EduCenter, EduCenterDto> {
+public class EduCenterController extends AbstractController<EduCenterService> implements CrudController<EduCenter, EduCenDto> {
 
 
     public EduCenterController(EduCenterService service) {
@@ -27,7 +27,7 @@ public class EduCenterController extends AbstractController<EduCenterService> im
     }
 
     @Override
-    public HttpEntity<?> update(EduCenterDto cd) {
+    public HttpEntity<?> update(EduCenDto cd) {
         return null;
     }
 

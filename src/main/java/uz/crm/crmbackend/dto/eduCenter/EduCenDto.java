@@ -8,5 +8,5 @@ import uz.crm.crmbackend.dto.Dto;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class EduCenterDto implements Dto {
+public class EduCenDto implements Dto {
 }

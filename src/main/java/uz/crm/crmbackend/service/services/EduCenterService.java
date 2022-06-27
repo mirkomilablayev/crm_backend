@@ -4,7 +4,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import uz.crm.crmbackend.dto.eduCenter.EduCenterDto;
+import uz.crm.crmbackend.dto.eduCenter.EduCenDto;
 import uz.crm.crmbackend.entity.EduCenter;
 import uz.crm.crmbackend.repository.repositories.EduCenterRepo;
 import uz.crm.crmbackend.service.AbstractService;
@@ -14,7 +14,7 @@ import uz.crm.crmbackend.service.CrudService;
 import java.time.LocalDateTime;
 
 @Service
-public class EduCenterService extends AbstractService<EduCenterRepo> implements BaseService, CrudService<EduCenter,EduCenterDto> {
+public class EduCenterService extends AbstractService<EduCenterRepo> implements BaseService, CrudService<EduCenter, EduCenDto> {
     public EduCenterService(EduCenterRepo repository) {
         super(repository);
     }
@@ -28,7 +28,7 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
     }
 
     @Override
-    public HttpEntity<?> update(EduCenterDto cd) {
+    public HttpEntity<?> update(EduCenDto cd) {
         return null;
     }
 

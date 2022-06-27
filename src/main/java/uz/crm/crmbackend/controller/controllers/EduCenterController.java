@@ -1,10 +1,7 @@
 package uz.crm.crmbackend.controller.controllers;
 
 import org.springframework.http.HttpEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uz.crm.crmbackend.controller.AbstractController;
 import uz.crm.crmbackend.controller.CrudController;
 import uz.crm.crmbackend.dto.eduCenter.EduCenDto;
@@ -12,6 +9,7 @@ import uz.crm.crmbackend.entity.EduCenter;
 import uz.crm.crmbackend.service.services.EduCenterService;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/eduCenter")
 public class EduCenterController extends AbstractController<EduCenterService> implements CrudController<EduCenter, EduCenDto> {
 

@@ -36,7 +36,7 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
 
     @Override
     public HttpEntity<?> create(EduCenCreateDto cd) {
-
+        // TODO: 6/28/2022 hamma telefon raqamlarni tekshirish kerak
         if (!repository.existsByCenterPhoneOrCeoPhoneAndIsArchived(cd.getCenterPhone(), cd.getCeoPhone(), false) && !userRepo.existsByUsernameAndIsDeleted(cd.getAdminUsername(), false)) {
             try {
                 EduCenter eduCenter = new EduCenter();
@@ -84,5 +84,9 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
 
     public HttpEntity<?> getAll() {
         return ResponseEntity.status(HttpStatus.OK).body(repository.findAllByIsArchived(false));
+    }
+
+    public HttpEntity<?> getAllStatus() {
+        return ResponseEntity.status(HttpStatus.OK).body(centerStatusRepo.findAll());
     }
 }

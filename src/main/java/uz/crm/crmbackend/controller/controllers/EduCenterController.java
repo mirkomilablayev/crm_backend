@@ -47,4 +47,9 @@ public class EduCenterController extends AbstractController<EduCenterService> im
     public HttpEntity<?> getAll(){
         return service.getAll();
     }
+
+    @GetMapping("/getStatus")
+    public HttpEntity<?> getAllStatus(){
+        return service.getAllStatus();
+    }
 }

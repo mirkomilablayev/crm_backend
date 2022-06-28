@@ -31,15 +31,16 @@ public class EduCenterController extends AbstractController<EduCenterService> im
     }
 
 
+    @GetMapping("/getOneEduCenter/{id}")
     @Override
     public HttpEntity<?> get(Long id) {
-        return null;
+        return service.get(id);
     }
 
     @DeleteMapping("delete/{id}")
     @Override
     public HttpEntity<?> deleteById(Long id) {
-        return null;
+        return service.deleteById(id);
     }
 
 
@@ -51,5 +52,15 @@ public class EduCenterController extends AbstractController<EduCenterService> im
     @GetMapping("/getStatus")
     public HttpEntity<?> getAllStatus(){
         return service.getAllStatus();
+    }
+
+    @GetMapping("getArchivedById/{id}")
+    public HttpEntity<?> getArchived(@PathVariable Long id){
+        return service.getArchived(id);
+    }
+
+    @GetMapping("/getAllArchived")
+    public HttpEntity<?> getAllArchved(){
+        return service.getAllArchived();
     }
 }

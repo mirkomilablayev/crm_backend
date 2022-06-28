@@ -37,33 +37,34 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
     @Override
     public HttpEntity<?> create(EduCenCreateDto cd) {
 
-        if (!repository.existsByCenterPhoneOrCeoPhoneAndIsArchived(cd.getCenterPhone(), cd.getCeoPhone(), false)) {
-            EduCenter eduCenter = new EduCenter();
-            eduCenter.setCenterPhone(cd.getCenterPhone());
-            eduCenter.setCenterStir(cd.getCenterStir());
-            eduCenter.setCenterStatus(centerStatusRepo.findById(cd.getCenterStatusId()).orElseThrow(() -> new ResourceNotFoundException("")));
-            eduCenter.setEdu_centerName(cd.getEdu_centerName());
-            eduCenter.setCeoPhone(cd.getCeoPhone());
-            eduCenter.setCeo_full_name(cd.getCeo_full_name());
-            eduCenter.setCenterStatus(centerStatusRepo.findById(cd.getCenterStatusId()).orElseThrow(() -> new ResourceNotFoundException("")));
-            eduCenter.setIsArchived(false);
-            eduCenter.setAddedAt(LocalDateTime.now());
-            EduCenter save = repository.save(eduCenter);
+        if (!repository.existsByCenterPhoneOrCeoPhoneAndIsArchived(cd.getCenterPhone(), cd.getCeoPhone(), false) && !userRepo.existsByUsernameAndIsDeleted(cd.getAdminUsername(), false)) {
+            try {
+                EduCenter eduCenter = new EduCenter();
+                eduCenter.setCenterPhone(cd.getCenterPhone());
+                eduCenter.setCenterStir(cd.getCenterStir());
+                eduCenter.setCenterStatus(centerStatusRepo.findById(cd.getCenterStatusId()).orElseThrow(() -> new ResourceNotFoundException("")));
+                eduCenter.setEdu_centerName(cd.getEdu_centerName());
+                eduCenter.setCeoPhone(cd.getCeoPhone());
+                eduCenter.setCeo_full_name(cd.getCeo_full_name());
+                eduCenter.setCenterStatus(centerStatusRepo.findById(cd.getCenterStatusId()).orElseThrow(() -> new ResourceNotFoundException("")));
+                eduCenter.setIsArchived(false);
+                eduCenter.setAddedAt(LocalDateTime.now());
+                eduCenter.setIsArchived(false);
+                eduCenter.setStartTime(cd.getJoiningStart());
+                eduCenter.setEndTime(cd.getJoiningEnd());
+                repository.save(eduCenter);
 
-            if (userRepo.existsByUsernameAndIsDeleted(cd.getAdminUsername(), false)) {
                 User user = new User();
                 user.setFullName(cd.getAdminFullName());
                 user.setUsername(cd.getAdminUsername());
                 user.setPassword(passwordEncoder.encode(cd.getAdminPassword()));
                 userRepo.save(user);
                 return ResponseEntity.status(HttpStatus.OK).body("Success");
-            } else {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(cd.getAdminUsername() + " is already exist ");
+            } catch (NullPointerException e) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("");
             }
-        }
-
-
-        return null;
+        } else
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Center or Ceo Phone number is already exist");
     }
 
     @Override

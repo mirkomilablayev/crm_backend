@@ -6,6 +6,7 @@ import uz.crm.crmbackend.entity.CenterStatus;
 
 import javax.persistence.Column;
 import javax.persistence.ManyToOne;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Data
@@ -16,8 +17,8 @@ public class EduCenCreateDto implements Dto {
     private String ceoPhone;
     private String centerStir;
     private Long centerStatusId;
-    private LocalTime joiningStart;
-    private LocalTime joiningEnd;
+    private LocalDateTime joiningStart;
+    private LocalDateTime joiningEnd;
     private String adminFullName;
     private String adminUsername;
     private String adminPassword;

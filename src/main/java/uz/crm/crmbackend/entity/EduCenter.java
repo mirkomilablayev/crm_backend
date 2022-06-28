@@ -30,6 +30,6 @@ public class EduCenter extends BaseEntityId implements BaseEntity {
     private Boolean isArchived = false;
     @ManyToOne
     private CenterStatus centerStatus;
-    private LocalDateTime addedAt;
+    private LocalDateTime addedAt = LocalDateTime.now();
 
 }

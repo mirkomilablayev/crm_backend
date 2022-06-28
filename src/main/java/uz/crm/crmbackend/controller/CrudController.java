@@ -7,7 +7,7 @@ import uz.crm.crmbackend.dto.Dto;
 import uz.crm.crmbackend.entity.baseEntities.BaseEntity;
 
 public interface CrudController<
-        DTO extends BaseEntity,
+        DTO extends Dto,
         UpDto extends Dto> {
 
      HttpEntity<?> create(@RequestBody DTO cd);

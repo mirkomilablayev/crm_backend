@@ -7,5 +7,6 @@ import uz.crm.crmbackend.repository.BaseRepository;
 import java.util.List;
 
 public interface EduCenterRepo extends JpaRepository<EduCenter,Long> , BaseRepository {
+    Boolean existsByCenterPhoneOrCeoPhoneAndIsArchived(String centerPhone, String ceoPhone, Boolean isArchived);
     List<EduCenter> findAllByIsArchived(Boolean isArchived);
 }

@@ -4,28 +4,29 @@ import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.crm.crmbackend.controller.AbstractController;
 import uz.crm.crmbackend.controller.CrudController;
-import uz.crm.crmbackend.dto.eduCenter.EduCenDto;
+import uz.crm.crmbackend.dto.eduCenter.EduCenCreateDto;
 import uz.crm.crmbackend.entity.EduCenter;
 import uz.crm.crmbackend.service.services.EduCenterService;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/eduCenter")
-public class EduCenterController extends AbstractController<EduCenterService> implements CrudController<EduCenter, EduCenDto> {
+public class EduCenterController extends AbstractController<EduCenterService> implements CrudController<EduCenCreateDto, EduCenCreateDto> {
 
 
     public EduCenterController(EduCenterService service) {
         super(service);
     }
 
+
     @PostMapping("/createEduCenter")
     @Override
-    public HttpEntity<?> create(EduCenter cd) {
+    public HttpEntity<?> create(EduCenCreateDto cd) {
         return service.create(cd);
     }
 
     @Override
-    public HttpEntity<?> update(EduCenDto cd) {
+    public HttpEntity<?> update(EduCenCreateDto cd) {
         return null;
     }
 
@@ -35,6 +36,7 @@ public class EduCenterController extends AbstractController<EduCenterService> im
         return null;
     }
 
+    @DeleteMapping("delete/{id}")
     @Override
     public HttpEntity<?> deleteById(Long id) {
         return null;

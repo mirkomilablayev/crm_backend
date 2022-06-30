@@ -57,7 +57,7 @@ public class EduCenterController extends AbstractController<EduCenterService> im
         return service.getAllStatus();
     }
 
-    @GetMapping("getArchivedById/{id}")
+    @GetMapping("/getArchivedById/{id}")
     public HttpEntity<?> getArchived(@PathVariable Long id){
         return service.getArchived(id);
     }

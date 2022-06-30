@@ -20,4 +20,5 @@ public class File extends BaseEntityId implements BaseEntity {
     private String file_path;
     private Long size;
     private String content_type;
+    private Boolean isActive = true;
 }

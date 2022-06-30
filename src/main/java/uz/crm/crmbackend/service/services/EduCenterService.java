@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import uz.crm.crmbackend.dto.eduCenter.EduCenCreateDto;
@@ -23,6 +24,8 @@ import uz.crm.crmbackend.service.BaseService;
 import uz.crm.crmbackend.service.CrudService;
 import uz.crm.crmbackend.tools.Constant;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -179,5 +182,24 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
             return ResponseEntity.status(HttpStatus.OK).body(save.getId());
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).body("Something went wrong");
+    }
+
+    public void showPictures(Long id, HttpServletResponse response) {
+        Optional<File> byId = fileRepo.findByIdAndIsActive(id,true);
+        if (byId.isPresent()){
+            File file = byId.get();
+            try {
+                response.setHeader("Content-Disposition", file.getContent_type());
+                response.setContentType(file.getContent_type());
+                FileInputStream inputStream = new FileInputStream(file.getFile_path());
+                FileCopyUtils.copy(inputStream, response.getOutputStream());
+            } catch (IOException ignored) {
+                try {
+                    throw new Exception();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

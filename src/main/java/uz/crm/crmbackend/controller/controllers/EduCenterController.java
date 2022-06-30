@@ -9,6 +9,8 @@ import uz.crm.crmbackend.dto.eduCenter.EduCenCreateDto;
 import uz.crm.crmbackend.entity.EduCenter;
 import uz.crm.crmbackend.service.services.EduCenterService;
 
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/eduCenter")
@@ -68,5 +70,11 @@ public class EduCenterController extends AbstractController<EduCenterService> im
     @PostMapping("/saveFile")
     public HttpEntity<?> saveFile(MultipartHttpServletRequest request){
         return service.saveFile(request);
+    }
+
+
+    @GetMapping("/ShowPic/{id}")
+    public void showFile(@PathVariable Long id, HttpServletResponse response){
+        service.showPictures(id,response);
     }
 }

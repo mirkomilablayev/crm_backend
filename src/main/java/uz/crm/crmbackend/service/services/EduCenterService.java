@@ -5,23 +5,30 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import uz.crm.crmbackend.dto.eduCenter.EduCenCreateDto;
 import uz.crm.crmbackend.dto.eduCenter.EduCenterShowDto;
 import uz.crm.crmbackend.entity.CenterStatus;
 import uz.crm.crmbackend.entity.EduCenter;
+import uz.crm.crmbackend.entity.File;
 import uz.crm.crmbackend.entity.User;
 import uz.crm.crmbackend.exceptions.ResourceNotFoundException;
 import uz.crm.crmbackend.repository.repositories.CenterStatusRepo;
 import uz.crm.crmbackend.repository.repositories.EduCenterRepo;
+import uz.crm.crmbackend.repository.repositories.FileRepo;
 import uz.crm.crmbackend.repository.repositories.UserRepo;
 import uz.crm.crmbackend.service.AbstractService;
 import uz.crm.crmbackend.service.BaseService;
 import uz.crm.crmbackend.service.CrudService;
+import uz.crm.crmbackend.tools.Constant;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class EduCenterService extends AbstractService<EduCenterRepo> implements BaseService, CrudService<EduCenCreateDto, EduCenCreateDto> {
@@ -29,12 +36,14 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
     private final CenterStatusRepo centerStatusRepo;
     private final PasswordEncoder passwordEncoder;
     private final UserRepo userRepo;
+    private final FileRepo fileRepo;
 
-    public EduCenterService(UserRepo userRepo, PasswordEncoder passwordEncoder, EduCenterRepo repository, CenterStatusRepo centerStatusRepo) {
+    public EduCenterService(FileRepo fileRepo, UserRepo userRepo, PasswordEncoder passwordEncoder, EduCenterRepo repository, CenterStatusRepo centerStatusRepo) {
         super(repository);
         this.passwordEncoder = passwordEncoder;
         this.userRepo = userRepo;
         this.centerStatusRepo = centerStatusRepo;
+        this.fileRepo = fileRepo;
     }
 
 
@@ -144,5 +153,31 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
 
     public HttpEntity<?> getAllArchived() {
         return ResponseEntity.status(HttpStatus.OK).body(getAllEduCenter(repository.findAllByIsArchived(true)));
+    }
+
+    public HttpEntity<?> saveFile(MultipartHttpServletRequest request) {
+        Iterator<String> fileNames = request.getFileNames();
+        MultipartFile file = request.getFile(fileNames.next());
+        if (file != null){
+            File newFile = new File();
+            newFile.setContent_type(file.getContentType());
+            String originalFilename = file.getOriginalFilename();
+            newFile.setOriginalName(originalFilename);
+            assert originalFilename != null;
+            String[] split = originalFilename.split("\\.");
+            String generatedName = UUID.randomUUID() + "." + split[split.length - 1];
+            String filePath = Constant.filePaths + "/" + generatedName;
+            newFile.setGeneratedName(generatedName);
+            newFile.setFile_path(filePath);
+            File save = fileRepo.save(newFile);
+            Path path = Paths.get(filePath);
+            try {
+                Files.copy(file.getInputStream(), path);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(save.getId());
+        }
+        return ResponseEntity.status(HttpStatus.CONFLICT).body("Something went wrong");
     }
 }

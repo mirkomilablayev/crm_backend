@@ -2,6 +2,7 @@ package uz.crm.crmbackend.controller.controllers;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import uz.crm.crmbackend.controller.AbstractController;
 import uz.crm.crmbackend.controller.CrudController;
 import uz.crm.crmbackend.dto.eduCenter.EduCenCreateDto;
@@ -62,5 +63,10 @@ public class EduCenterController extends AbstractController<EduCenterService> im
     @GetMapping("/getAllArchived")
     public HttpEntity<?> getAllArchved(){
         return service.getAllArchived();
+    }
+
+    @PostMapping("/saveFile")
+    public HttpEntity<?> saveFile(MultipartHttpServletRequest request){
+        return service.saveFile(request);
     }
 }

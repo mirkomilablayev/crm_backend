@@ -22,5 +22,6 @@ public class EduCenCreateDto implements Dto {
     private String adminFullName;
     private String adminUsername;
     private String adminPassword;
+    private Long logoId;
 
 }

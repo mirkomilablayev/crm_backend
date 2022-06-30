@@ -40,7 +40,7 @@ public class EduCenterController extends AbstractController<EduCenterService> im
         return service.get(id);
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("/delete/{id}")
     @Override
     public HttpEntity<?> deleteById(Long id) {
         return service.deleteById(id);

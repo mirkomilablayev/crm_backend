@@ -133,10 +133,12 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
             EduCenterShowDto item = new EduCenterShowDto();
             item.setId(a.getId());
             item.setEduCenterName(a.getEdu_centerName());
+            if (a.getCenterStatus() != null)
             item.setStatus(a.getCenterStatus().getName());
             item.setCeo(a.getCeo_full_name());
             item.setPhoneNumber(a.getCenterPhone());
             item.setJoiningAt(a.getStartTime());
+            if (a.getLogoFile() != null)
             item.setLogoId(a.getLogoFile().getId());
             eduCenterShowDtos.add(item);
         });

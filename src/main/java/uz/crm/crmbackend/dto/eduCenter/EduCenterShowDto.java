@@ -12,4 +12,5 @@ public class EduCenterShowDto {
     private String status;
     private String phoneNumber;
     private String ceo;
+    private Long logoId;
 }

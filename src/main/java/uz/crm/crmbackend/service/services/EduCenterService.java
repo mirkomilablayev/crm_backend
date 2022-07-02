@@ -10,7 +10,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import uz.crm.crmbackend.dto.eduCenter.EduCenCreateDto;
 import uz.crm.crmbackend.dto.eduCenter.EduCenterShowDto;
-import uz.crm.crmbackend.entity.CenterStatus;
 import uz.crm.crmbackend.entity.EduCenter;
 import uz.crm.crmbackend.entity.File;
 import uz.crm.crmbackend.entity.User;
@@ -69,6 +68,7 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
                 eduCenter.setIsArchived(false);
                 eduCenter.setStartTime(cd.getJoiningStart());
                 eduCenter.setEndTime(cd.getJoiningEnd());
+                eduCenter.setLogoFile(fileRepo.findByIdAndIsActive(cd.getLogoId(),true).orElseThrow(ResourceNotFoundException::new));
                 repository.save(eduCenter);
 
                 User user = new User();
@@ -100,6 +100,7 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
             eduCenterShowDto.setStatus(eduCenter.getCenterStatus().getName());
             eduCenterShowDto.setJoiningAt(eduCenter.getStartTime());
             eduCenterShowDto.setPhoneNumber(eduCenter.getCenterPhone());
+            eduCenterShowDto.setLogoId(eduCenter.getLogoFile().getId());
             return ResponseEntity.status(HttpStatus.OK).body(eduCenterShowDto);
         }else{
         return ResponseEntity.status(HttpStatus.OK).body("EduCenter not found");
@@ -133,6 +134,7 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
             item.setCeo(a.getCeo_full_name());
             item.setPhoneNumber(a.getCenterPhone());
             item.setJoiningAt(a.getStartTime());
+            item.setLogoId(a.getLogoFile().getId());
             eduCenterShowDtos.add(item);
         });
         return eduCenterShowDtos;

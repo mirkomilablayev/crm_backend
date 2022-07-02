@@ -4,7 +4,6 @@ import lombok.*;
 import uz.crm.crmbackend.entity.baseEntities.BaseEntity;
 import uz.crm.crmbackend.entity.baseEntities.BaseEntityId;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
@@ -26,6 +25,8 @@ public class EduCenter extends BaseEntityId implements BaseEntity {
     private Boolean isArchived = false;
     @ManyToOne
     private CenterStatus centerStatus;
+    @ManyToOne
+    private File logoFile;
     private LocalDateTime addedAt = LocalDateTime.now();
 
 }

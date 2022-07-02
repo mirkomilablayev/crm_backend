@@ -24,9 +24,14 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
 
-    @PostMapping("/register")
-    public HttpEntity<?> register(@RequestBody RegisterDto registerDto){
-        return authService.register(registerDto);
+    @PostMapping("/registerAdmin")
+    public HttpEntity<?> registerA(@RequestBody RegisterDto registerDto){
+        return authService.registerA(registerDto);
+    }
+
+    @PostMapping("/registerTeacher")
+    public HttpEntity<?> registerT(@RequestBody RegisterDto registerDto){
+        return authService.registerT(registerDto);
     }
 
     @PostMapping("/login")

@@ -66,8 +66,7 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
                 eduCenter.setIsArchived(false);
                 eduCenter.setAddedAt(LocalDateTime.now());
                 eduCenter.setIsArchived(false);
-                eduCenter.setStartTime(cd.getJoiningStart());
-                if (cd.getLogoId() > 0 && cd.getLogoId() != null) {
+                if (cd.getLogoId() != null && cd.getLogoId() > 0) {
                     eduCenter.setLogoFile(fileRepo.findByIdAndIsActive(cd.getLogoId(), true).orElseThrow(ResourceNotFoundException::new));
                 }
                 EduCenter save = repository.save(eduCenter);
@@ -136,7 +135,7 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
             item.setStatus(a.getCenterStatus().getName());
             item.setCeo(a.getCeo_full_name());
             item.setPhoneNumber(a.getCenterPhone());
-            item.setJoiningAt(a.getStartTime());
+            item.setJoiningAt(a.getAddedAt());
             if (a.getLogoFile() != null)
             item.setLogoId(a.getLogoFile().getId());
             eduCenterShowDtos.add(item);

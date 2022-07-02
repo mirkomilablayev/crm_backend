@@ -67,14 +67,15 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
                 eduCenter.setIsArchived(false);
                 eduCenter.setStartTime(cd.getJoiningStart());
                 eduCenter.setEndTime(cd.getJoiningEnd());
-                if (cd.getLogoId().equals(0) || cd.getLogoId() != null) {
+                if (cd.getLogoId() > 0 && cd.getLogoId() != null) {
                     eduCenter.setLogoFile(fileRepo.findByIdAndIsActive(cd.getLogoId(), true).orElseThrow(ResourceNotFoundException::new));
                 }
-                repository.save(eduCenter);
+                EduCenter save = repository.save(eduCenter);
 
                 User user = new User();
                 user.setFullName(cd.getAdminFullName());
                 user.setUsername(cd.getAdminUsername());
+                user.setEduCenter(new ArrayList<>(List.of(save)));
                 user.setPassword(passwordEncoder.encode(cd.getAdminPassword()));
                 userRepo.save(user);
                 return ResponseEntity.status(HttpStatus.OK).body("Success");

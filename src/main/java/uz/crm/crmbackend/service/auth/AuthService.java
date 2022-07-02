@@ -31,22 +31,24 @@ public class AuthService implements UserDetailsService , BaseService {
     private final RoleRepo roleRepo;
 
 
-    public HttpEntity<?> registerA(RegisterDto registerDto) {
-        if (!userRepo.existsByUsernameAndIsDeleted(registerDto.getUsername(),false)) {
+    public HttpEntity<?> registerA(RegisterDto cd) {
+        if (!userRepo.existsByUsernameAndIsDeleted(cd.getUsername(),false)) {
             User user = new User();
-            user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
+            user.setPassword(passwordEncoder.encode(cd.getPassword()));
             String user_role = Constant.ADMIN;
             Set<UserRole> userRoles = new HashSet<>();
             UserRole userRole = roleRepo.findByNameAndIsActive(user_role,true).orElseThrow(() -> new UserRoleNotFoundException(user_role + " not found"));
             userRoles.add(userRole);
             user.setUserRoleSet(userRoles);
-            user.setUsername(registerDto.getUsername());
-            user.setFullName(registerDto.getFullName());
+            user.setPhoneNumber(cd.getPhoneNumber());
+            user.setPassportSerialNum(cd.getPassportSerialNumber());
+            user.setUsername(cd.getUsername());
+            user.setFullName(cd.getFullName());
 
             user.setUserRoleSet(userRoles);
             return ResponseEntity.status(HttpStatus.OK).body(userRepo.save(user));
         }
-        throw new UsernameAlreadyRegisterException(registerDto.getUsername()+ " is already registered");
+        throw new UsernameAlreadyRegisterException(cd.getUsername()+ " is already registered");
     }
 
     public HttpEntity<?> registerT(RegisterDto registerDto) {
@@ -60,7 +62,6 @@ public class AuthService implements UserDetailsService , BaseService {
             user.setUserRoleSet(userRoles);
             user.setUsername(registerDto.getUsername());
             user.setFullName(registerDto.getFullName());
-
             user.setUserRoleSet(userRoles);
             return ResponseEntity.status(HttpStatus.OK).body(userRepo.save(user));
         }

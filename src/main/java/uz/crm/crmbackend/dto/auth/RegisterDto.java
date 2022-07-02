@@ -11,6 +11,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class RegisterDto {
     private String fullName;
+    private String passportSerialNumber;
+    private String phoneNumber;
     private String password;
     private String username;
 }
+

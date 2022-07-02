@@ -99,7 +99,7 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
             eduCenterShowDto.setId(eduCenter.getId());
             eduCenterShowDto.setEduCenterName(eduCenter.getEdu_centerName());
             eduCenterShowDto.setStatus(eduCenter.getCenterStatus().getName());
-            eduCenterShowDto.setJoiningAt(eduCenter.getStartTime());
+            eduCenterShowDto.setJoiningAt(timeFormatter(eduCenter.getStartTime()));
             eduCenterShowDto.setPhoneNumber(eduCenter.getCenterPhone());
             eduCenterShowDto.setLogoId(eduCenter.getLogoFile().getId());
             return ResponseEntity.status(HttpStatus.OK).body(eduCenterShowDto);
@@ -135,12 +135,20 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
             item.setStatus(a.getCenterStatus().getName());
             item.setCeo(a.getCeo_full_name());
             item.setPhoneNumber(a.getCenterPhone());
-            item.setJoiningAt(a.getAddedAt());
+            item.setJoiningAt(timeFormatter(a.getAddedAt()));
             if (a.getLogoFile() != null)
             item.setLogoId(a.getLogoFile().getId());
             eduCenterShowDtos.add(item);
         });
         return eduCenterShowDtos;
+    }
+
+    private String timeFormatter(LocalDateTime addedAt) {
+        if (addedAt != null){
+            return  ""+addedAt.getDayOfMonth()+"-"+addedAt.getMonth()+", "+addedAt.getYear()+" "+addedAt.getHour()+":"+addedAt.getMinute()+":"+addedAt.getSecond();
+        }else{
+            return "";
+        }
     }
 
     public HttpEntity<?> getAllStatus() {

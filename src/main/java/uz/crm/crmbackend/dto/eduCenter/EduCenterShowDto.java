@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public class EduCenterShowDto {
     private Long id;
     private String eduCenterName;
-    private LocalDateTime joiningAt;
+    private String joiningAt;
     private String status;
     private String phoneNumber;
     private String ceo;

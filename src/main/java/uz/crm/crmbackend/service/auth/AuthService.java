@@ -38,6 +38,7 @@ public class AuthService implements UserDetailsService , BaseService {
             Set<UserRole> userRoles = new HashSet<>();
             UserRole userRole = roleRepo.findByNameAndIsActive("USER",true).orElseThrow(() -> new UserRoleNotFoundException(user_role + " not found"));
             userRoles.add(userRole);
+            user.setUserRoleSet(userRoles);
             user.setUsername(registerDto.getUsername());
             user.setFullName(registerDto.getFullName());
 

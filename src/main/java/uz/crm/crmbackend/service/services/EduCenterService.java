@@ -58,17 +58,18 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
                 EduCenter eduCenter = new EduCenter();
                 eduCenter.setCenterPhone(cd.getCenterPhone());
                 eduCenter.setCenterStir(cd.getCenterStir());
-                eduCenter.setCenterStatus(centerStatusRepo.findById(cd.getCenterStatusId()).orElseThrow(() -> new ResourceNotFoundException("")));
+                eduCenter.setCenterStatus(centerStatusRepo.findByName(cd.getCenterStatusName()).orElseThrow(() -> new ResourceNotFoundException("")));
                 eduCenter.setEdu_centerName(cd.getEdu_centerName());
                 eduCenter.setCeoPhone(cd.getCeoPhone());
                 eduCenter.setCeo_full_name(cd.getCeo_full_name());
-                eduCenter.setCenterStatus(centerStatusRepo.findById(cd.getCenterStatusId()).orElseThrow(() -> new ResourceNotFoundException("")));
                 eduCenter.setIsArchived(false);
                 eduCenter.setAddedAt(LocalDateTime.now());
                 eduCenter.setIsArchived(false);
                 eduCenter.setStartTime(cd.getJoiningStart());
                 eduCenter.setEndTime(cd.getJoiningEnd());
-                eduCenter.setLogoFile(fileRepo.findByIdAndIsActive(cd.getLogoId(),true).orElseThrow(ResourceNotFoundException::new));
+                if (cd.getLogoId() != null) {
+                    eduCenter.setLogoFile(fileRepo.findByIdAndIsActive(cd.getLogoId(), true).orElseThrow(ResourceNotFoundException::new));
+                }
                 repository.save(eduCenter);
 
                 User user = new User();

@@ -11,8 +11,6 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @ToString
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 public class PayEdu extends BaseEntityId implements BaseEntity {
     @ManyToOne
@@ -22,4 +20,15 @@ public class PayEdu extends BaseEntityId implements BaseEntity {
     private Double payAmount;
     private String comment;
 
+    public PayEdu(EduCenter eduCenter, LocalDateTime startTime, LocalDateTime endTime, Double payAmount, String comment) {
+        this.eduCenter = eduCenter;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.payAmount = payAmount;
+        this.comment = comment;
+    }
+
+    public PayEdu() {
+
+    }
 }

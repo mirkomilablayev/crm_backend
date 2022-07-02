@@ -77,4 +77,9 @@ public class EduCenterController extends AbstractController<EduCenterService> im
     public void showFile(@PathVariable Long id, HttpServletResponse response){
         service.showPictures(id,response);
     }
+
+    @GetMapping("/getEducentersNameAndId")
+    public HttpEntity<?> getEduCenterName(){
+        return service.getEduCenterName();
+    }
 }

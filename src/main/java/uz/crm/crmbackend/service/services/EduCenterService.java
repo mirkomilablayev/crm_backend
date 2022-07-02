@@ -9,6 +9,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import uz.crm.crmbackend.dto.eduCenter.EduCenCreateDto;
+import uz.crm.crmbackend.dto.eduCenter.EduCenterSelectInfo;
 import uz.crm.crmbackend.dto.eduCenter.EduCenterShowDto;
 import uz.crm.crmbackend.entity.EduCenter;
 import uz.crm.crmbackend.entity.File;
@@ -205,5 +206,16 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
                 }
             }
         }
+    }
+
+    public HttpEntity<?> getEduCenterName() {
+        List<EduCenterSelectInfo> res = new ArrayList<>();
+        repository.findAllByIsArchived(false).forEach(a -> {
+            EduCenterSelectInfo b = new EduCenterSelectInfo();
+            b.setEduCenterId(a.getId());
+            b.setEduCenterName(a.getEdu_centerName());
+            res.add(b);
+        });
+        return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 }

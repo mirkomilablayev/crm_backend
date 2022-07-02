@@ -1,8 +1,7 @@
 package uz.crm.crmbackend.controller.controllers;
 
 import org.springframework.http.HttpEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uz.crm.crmbackend.controller.AbstractController;
 import uz.crm.crmbackend.controller.CrudController;
 import uz.crm.crmbackend.dto.eduCenterPay.PayEduCreateDto;
@@ -16,9 +15,10 @@ public class PayEduController extends AbstractController<PayEduService> implemen
         super(service);
     }
 
+    @PostMapping("/createEduPay")
     @Override
     public HttpEntity<?> create(PayEduCreateDto cd) {
-        return null;
+        return service.create(cd);
     }
 
     @Override
@@ -34,5 +34,10 @@ public class PayEduController extends AbstractController<PayEduService> implemen
     @Override
     public HttpEntity<?> deleteById(Long id) {
         return null;
+    }
+
+    @GetMapping("/getEduPays/{eduCenterId}")
+    public HttpEntity<?> getEducationPayments(@PathVariable  Long eduCenterId){
+        return service.getEducationPayments(eduCenterId);
     }
 }

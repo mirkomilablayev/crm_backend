@@ -67,7 +67,6 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
                 eduCenter.setAddedAt(LocalDateTime.now());
                 eduCenter.setIsArchived(false);
                 eduCenter.setStartTime(cd.getJoiningStart());
-                eduCenter.setEndTime(cd.getJoiningEnd());
                 if (cd.getLogoId() > 0 && cd.getLogoId() != null) {
                     eduCenter.setLogoFile(fileRepo.findByIdAndIsActive(cd.getLogoId(), true).orElseThrow(ResourceNotFoundException::new));
                 }

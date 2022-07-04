@@ -3,13 +3,14 @@ package uz.crm.crmbackend.service.services;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 import uz.crm.crmbackend.dto.eduCenterPay.PayEduCreateDto;
-import uz.crm.crmbackend.dto.eduCenterPay.PayEduShow;
+import uz.crm.crmbackend.dto.eduCenterPay.PayEduShowDto;
 import uz.crm.crmbackend.dto.eduCenterPay.PayEduUpdateDto;
 import uz.crm.crmbackend.dto.eduCenterPay.Pays;
 import uz.crm.crmbackend.entity.PayEdu;
+import uz.crm.crmbackend.entity.User;
 import uz.crm.crmbackend.exceptions.ResourceNotFoundException;
 import uz.crm.crmbackend.repository.repositories.EduCenterRepo;
 import uz.crm.crmbackend.repository.repositories.PayEduRepo;
@@ -63,14 +64,15 @@ public class PayEduService extends AbstractService<PayEduRepo> implements BaseSe
 
 
     public HttpEntity<?> getEducationPayments(Long eduCenterId){
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<PayEdu> payEduList = repository.findAllByEduCenter_Id(eduCenterId);
         return ResponseEntity.status(HttpStatus.OK).body(makePayEduShow(payEduList,eduCenterId));
     }
 
-    private PayEduShow makePayEduShow(List<PayEdu> payEduList, Long eduCenterId) {
-        PayEduShow payEduShow = new PayEduShow();
-        payEduShow.setEduCenterId(eduCenterId);
-        payEduShow.setEduCenterName(
+    private PayEduShowDto makePayEduShow(List<PayEdu> payEduList, Long eduCenterId) {
+        PayEduShowDto payEduShowDto = new PayEduShowDto();
+        payEduShowDto.setEduCenterId(eduCenterId);
+        payEduShowDto.setEduCenterName(
                 eduCenterRepo.findByIdAndIsArchived(eduCenterId,false)
                         .orElseThrow(ResourceNotFoundException::new).getEdu_centerName()
         );
@@ -82,7 +84,7 @@ public class PayEduService extends AbstractService<PayEduRepo> implements BaseSe
             b.setStartEnd(a.getEndTime());
             pays.add(b);
         });
-        payEduShow.setPaysList(pays);
-        return payEduShow;
+        payEduShowDto.setPaysList(pays);
+        return payEduShowDto;
     }
 }

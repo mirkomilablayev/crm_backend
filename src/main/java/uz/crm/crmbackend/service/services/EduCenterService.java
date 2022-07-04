@@ -9,6 +9,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import uz.crm.crmbackend.dto.eduCenter.EduCenCreateDto;
+import uz.crm.crmbackend.dto.eduCenter.EduCenUpdateDto;
 import uz.crm.crmbackend.dto.eduCenter.EduCenterSelectInfo;
 import uz.crm.crmbackend.dto.eduCenter.EduCenterShowDto;
 import uz.crm.crmbackend.entity.EduCenter;
@@ -34,7 +35,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-public class EduCenterService extends AbstractService<EduCenterRepo> implements BaseService, CrudService<EduCenCreateDto, EduCenCreateDto> {
+public class EduCenterService extends AbstractService<EduCenterRepo> implements BaseService, CrudService<EduCenCreateDto, EduCenUpdateDto> {
 
     private final CenterStatusRepo centerStatusRepo;
     private final PasswordEncoder passwordEncoder;
@@ -53,7 +54,8 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
     @Override
     public HttpEntity<?> create(EduCenCreateDto cd) {
         // TODO: 6/28/2022 hamma telefon raqamlarni tekshirish kerak
-        if (!repository.existsByCenterPhoneOrCeoPhoneAndIsArchived(cd.getCenterPhone(), cd.getCeoPhone(), false)
+        if (!repository.existsByCeoPhoneAndIsArchived(cd.getCeoPhone(),false)
+                && !repository.existsByCenterPhoneAndIsArchived(cd.getCenterPhone(),false)
                 && !userRepo.existsByUsernameAndIsDeleted(cd.getAdminUsername(), false)) {
             try {
                 EduCenter eduCenter = new EduCenter();
@@ -86,7 +88,7 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
     }
 
     @Override
-    public HttpEntity<?> update(EduCenCreateDto cd) {
+    public HttpEntity<?> update(EduCenUpdateDto cd) {
         return null;
     }
 

@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import uz.crm.crmbackend.controller.AbstractController;
 import uz.crm.crmbackend.controller.CrudController;
 import uz.crm.crmbackend.dto.eduCenter.EduCenCreateDto;
+import uz.crm.crmbackend.dto.eduCenter.EduCenUpdateDto;
 import uz.crm.crmbackend.entity.EduCenter;
 import uz.crm.crmbackend.service.services.EduCenterService;
 
@@ -14,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/eduCenter")
-public class EduCenterController extends AbstractController<EduCenterService> implements CrudController<EduCenCreateDto, EduCenCreateDto> {
+public class EduCenterController extends AbstractController<EduCenterService> implements CrudController<EduCenCreateDto, EduCenUpdateDto> {
 
 
     public EduCenterController(EduCenterService service) {
@@ -28,9 +29,10 @@ public class EduCenterController extends AbstractController<EduCenterService> im
         return service.create(cd);
     }
 
+    @PutMapping("/updateEduCenter")
     @Override
-    public HttpEntity<?> update(EduCenCreateDto cd) {
-        return null;
+    public HttpEntity<?> update(EduCenUpdateDto cd) {
+        return service.update(cd);
     }
 
 

@@ -23,10 +23,13 @@ public class EduCenter extends BaseEntityId implements BaseEntity {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Boolean isArchived = false;
+
+
     @ManyToOne
     private CenterStatus centerStatus;
     @ManyToOne
     private File logoFile;
     private LocalDateTime addedAt = LocalDateTime.now();
+    private LocalDateTime lastUpdatedAt;
 
 }

@@ -12,9 +12,11 @@ import uz.crm.crmbackend.dto.eduCenter.EduCenCreateDto;
 import uz.crm.crmbackend.dto.eduCenter.EduCenUpdateDto;
 import uz.crm.crmbackend.dto.eduCenter.EduCenterSelectInfo;
 import uz.crm.crmbackend.dto.eduCenter.EduCenterShowDto;
+import uz.crm.crmbackend.entity.CenterStatus;
 import uz.crm.crmbackend.entity.EduCenter;
 import uz.crm.crmbackend.entity.File;
 import uz.crm.crmbackend.entity.User;
+import uz.crm.crmbackend.exceptions.ConflictException;
 import uz.crm.crmbackend.exceptions.ResourceNotFoundException;
 import uz.crm.crmbackend.repository.repositories.CenterStatusRepo;
 import uz.crm.crmbackend.repository.repositories.EduCenterRepo;
@@ -54,8 +56,8 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
     @Override
     public HttpEntity<?> create(EduCenCreateDto cd) {
         // TODO: 6/28/2022 hamma telefon raqamlarni tekshirish kerak
-        if (!repository.existsByCeoPhoneAndIsArchived(cd.getCeoPhone(),false)
-                && !repository.existsByCenterPhoneAndIsArchived(cd.getCenterPhone(),false)
+        if (!repository.existsByCeoPhoneAndIsArchived(cd.getCeoPhone(), false)
+                && !repository.existsByCenterPhoneAndIsArchived(cd.getCenterPhone(), false)
                 && !userRepo.existsByUsernameAndIsDeleted(cd.getAdminUsername(), false)) {
             try {
                 EduCenter eduCenter = new EduCenter();
@@ -89,13 +91,56 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
 
     @Override
     public HttpEntity<?> update(EduCenUpdateDto cd) {
+        EduCenter eduCenter = repository.findByIdAndIsArchived(cd.getEduCenterId(), false).orElseThrow(() -> new ResourceNotFoundException(""));
+
+        if (cd.getEdu_centerName() != null
+                && checkBlank(cd.getEdu_centerName())
+                && !eduCenter.getEdu_centerName().equals(cd.getEdu_centerName())) {
+            eduCenter.setEdu_centerName(cd.getEdu_centerName());
+        }
+
+        if (cd.getCenterPhone() != null
+                && checkBlank(cd.getCenterPhone())
+                && !eduCenter.getCenterPhone().equals(cd.getCenterPhone())) {
+            eduCenter.setCenterPhone(cd.getCenterPhone());
+        }
+
+        if (cd.getCenterStir() != null
+                && checkBlank(cd.getCenterStir())
+                && !eduCenter.getCenterStir().equals(cd.getCenterStir())) {
+            eduCenter.setCenterStir(cd.getCenterStir());
+        }
+
+        if (cd.getCeo_full_name() != null
+                && checkBlank(cd.getCeo_full_name())
+                && !eduCenter.getCeo_full_name().equals(cd.getCeo_full_name())) {
+            eduCenter.setCeo_full_name(cd.getCeo_full_name());
+        }
+
+        if (cd.getCeoPhone() != null
+                && checkBlank(cd.getCeoPhone())
+                && !eduCenter.getCeoPhone().equals(cd.getCeoPhone())) {
+            eduCenter.setCeoPhone(cd.getCeoPhone());
+        }
+
+        if (cd.getCenterStatusName() != null
+                && checkBlank(cd.getCenterStatusName())
+                && !eduCenter.getCenterStatus().getName().equals(cd.getCenterStatusName())) {
+            eduCenter.setCenterStatus(centerStatusRepo.findByName(cd.getCenterStatusName())
+                    .orElseThrow(ResourceNotFoundException::new));
+        }
+
+        if (cd.getLogoId() != null && cd.getLogoId() > 0) {
+            eduCenter.setLogoFile(fileRepo.findByIdAndIsActive(cd.getLogoId(), true)
+                    .orElseThrow(ResourceNotFoundException::new));
+        }
         return null;
     }
 
     @Override
     public HttpEntity<?> get(Long id) {
         Optional<EduCenter> eduCenterOptional = repository.findByIdAndIsArchived(id, false);
-        if (eduCenterOptional.isPresent()){
+        if (eduCenterOptional.isPresent()) {
             EduCenterShowDto eduCenterShowDto = new EduCenterShowDto();
             EduCenter eduCenter = eduCenterOptional.get();
             eduCenterShowDto.setId(eduCenter.getId());
@@ -105,8 +150,8 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
             eduCenterShowDto.setPhoneNumber(eduCenter.getCenterPhone());
             eduCenterShowDto.setLogoId(eduCenter.getLogoFile().getId());
             return ResponseEntity.status(HttpStatus.OK).body(eduCenterShowDto);
-        }else{
-        return ResponseEntity.status(HttpStatus.OK).body("EduCenter not found");
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body("EduCenter not found");
         }
     }
 
@@ -118,7 +163,7 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
             eduCenter.setIsArchived(true);
             repository.save(eduCenter);
             return ResponseEntity.status(HttpStatus.OK).body("Success");
-        }else{
+        } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Edu center not found");
         }
     }
@@ -127,28 +172,28 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
         return ResponseEntity.status(HttpStatus.OK).body(getAllEduCenter(repository.findAllByIsArchived(false)));
     }
 
-    public List<EduCenterShowDto> getAllEduCenter(List<EduCenter> eduCenters){
+    public List<EduCenterShowDto> getAllEduCenter(List<EduCenter> eduCenters) {
         List<EduCenterShowDto> eduCenterShowDtos = new ArrayList<>();
         eduCenters.forEach(a -> {
             EduCenterShowDto item = new EduCenterShowDto();
             item.setId(a.getId());
             item.setEduCenterName(a.getEdu_centerName());
             if (a.getCenterStatus() != null)
-            item.setStatus(a.getCenterStatus().getName());
+                item.setStatus(a.getCenterStatus().getName());
             item.setCeo(a.getCeo_full_name());
             item.setPhoneNumber(a.getCenterPhone());
             item.setJoiningAt(timeFormatter(a.getAddedAt()));
             if (a.getLogoFile() != null)
-            item.setLogoId(a.getLogoFile().getId());
+                item.setLogoId(a.getLogoFile().getId());
             eduCenterShowDtos.add(item);
         });
         return eduCenterShowDtos;
     }
 
     private String timeFormatter(LocalDateTime addedAt) {
-        if (addedAt != null){
-            return  ""+addedAt.getDayOfMonth()+"-"+addedAt.getMonth()+", "+addedAt.getYear()+" "+addedAt.getHour()+":"+addedAt.getMinute()+":"+addedAt.getSecond();
-        }else{
+        if (addedAt != null) {
+            return "" + addedAt.getDayOfMonth() + "-" + addedAt.getMonth() + ", " + addedAt.getYear() + " " + addedAt.getHour() + ":" + addedAt.getMinute() + ":" + addedAt.getSecond();
+        } else {
             return "";
         }
     }
@@ -164,7 +209,7 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
             eduCenter.setIsArchived(true);
             repository.save(eduCenter);
             return ResponseEntity.status(HttpStatus.OK).body("Success");
-        }else{
+        } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Edu center not found");
         }
     }
@@ -176,7 +221,7 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
     public HttpEntity<?> saveFile(MultipartHttpServletRequest request) {
         Iterator<String> fileNames = request.getFileNames();
         MultipartFile file = request.getFile(fileNames.next());
-        if (file != null){
+        if (file != null) {
             File newFile = new File();
             newFile.setContent_type(file.getContentType());
             String originalFilename = file.getOriginalFilename();
@@ -200,8 +245,8 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
     }
 
     public void showPictures(Long id, HttpServletResponse response) {
-        Optional<File> byId = fileRepo.findByIdAndIsActive(id,true);
-        if (byId.isPresent()){
+        Optional<File> byId = fileRepo.findByIdAndIsActive(id, true);
+        if (byId.isPresent()) {
             File file = byId.get();
             try {
                 response.setHeader("Content-Disposition", file.getContent_type());
@@ -228,4 +273,33 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
         });
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
+
+
+    public HttpEntity<?> restoreEduCenter(Long eduCenterId) {
+        EduCenter eduCenter = repository.findByIdAndIsArchived(eduCenterId, true).orElseThrow(ResourceNotFoundException::new);
+        eduCenter.setIsArchived(false);
+        repository.save(eduCenter);
+        return ResponseEntity.status(HttpStatus.OK).body("Success");
+    }
+
+    public boolean checkBlank(String str) {
+        return !str.trim().isEmpty();
+    }
+
+    public HttpEntity<?> changeStatus(Long eduCenterId) {
+        EduCenter eduCenter = repository.findByIdAndIsArchived(eduCenterId, false).orElseThrow(ResourceNotFoundException::new);
+        CenterStatus centerStatus = eduCenter.getCenterStatus();
+        if (centerStatus.getName().equals("Active")) {
+            eduCenter.setCenterStatus(centerStatusRepo.findByName("UnActive").orElseThrow(ResourceNotFoundException::new));
+            repository.save(eduCenter);
+        } else if (centerStatus.getName().equals("UnActive")) {
+            eduCenter.setCenterStatus(centerStatusRepo.findByName("Active").orElseThrow(ResourceNotFoundException::new));
+            repository.save(eduCenter);
+        } else {
+            throw new ConflictException("");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body("Success");
+    }
+
+
 }

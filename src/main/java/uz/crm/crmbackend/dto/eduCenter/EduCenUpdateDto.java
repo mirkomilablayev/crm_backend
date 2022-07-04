@@ -14,8 +14,6 @@ public class EduCenUpdateDto implements Dto {
     private String ceoPhone;
     private String centerStir;
     private String centerStatusName;
-    private LocalDateTime joiningStart;
-    private LocalDateTime joiningEnd;
     private Long logoId;
 
 }

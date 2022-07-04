@@ -11,6 +11,7 @@ import uz.crm.crmbackend.entity.EduCenter;
 import uz.crm.crmbackend.service.services.EduCenterService;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Path;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -72,6 +73,17 @@ public class EduCenterController extends AbstractController<EduCenterService> im
     @PostMapping("/saveFile")
     public HttpEntity<?> saveFile(MultipartHttpServletRequest request){
         return service.saveFile(request);
+    }
+
+    @GetMapping("/reStore/{eduCenterId}")
+    public HttpEntity<?> restoreEduCenter(@PathVariable Long eduCenterId){
+        return service.restoreEduCenter(eduCenterId);
+    }
+
+
+    @PutMapping("/changeStatus/{eduCenterId}")
+    public HttpEntity<?> changeEduCenterStatus(@PathVariable Long eduCenterId){
+        return service.changeStatus(eduCenterId);
     }
 
 

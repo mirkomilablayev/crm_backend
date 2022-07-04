@@ -16,7 +16,6 @@ public class EduCenCreateDto implements Dto {
     private String ceo_full_name;
     private String ceoPhone;
     private String centerStir;
-    private String centerStatusName;
     private LocalDateTime joiningStart;
     private LocalDateTime joiningEnd;
     private String adminFullName;

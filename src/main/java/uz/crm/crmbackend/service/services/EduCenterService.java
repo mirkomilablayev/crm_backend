@@ -55,15 +55,11 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
 
     @Override
     public HttpEntity<?> create(EduCenCreateDto cd) {
-        // TODO: 6/28/2022 hamma telefon raqamlarni tekshirish kerak
-        if (!repository.existsByCeoPhoneAndIsArchived(cd.getCeoPhone(), false)
-                && !repository.existsByCenterPhoneAndIsArchived(cd.getCenterPhone(), false)
-                && !userRepo.existsByUsernameAndIsDeleted(cd.getAdminUsername(), false)) {
             try {
                 EduCenter eduCenter = new EduCenter();
                 eduCenter.setCenterPhone(cd.getCenterPhone());
                 eduCenter.setCenterStir(cd.getCenterStir());
-                eduCenter.setCenterStatus(centerStatusRepo.findByName(cd.getCenterStatusName()).orElseThrow(() -> new ResourceNotFoundException("")));
+                eduCenter.setCenterStatus(centerStatusRepo.findByName("Demo").orElseThrow(() -> new ResourceNotFoundException("")));
                 eduCenter.setEdu_centerName(cd.getEdu_centerName());
                 eduCenter.setCeoPhone(cd.getCeoPhone());
                 eduCenter.setCeo_full_name(cd.getCeo_full_name());
@@ -85,8 +81,6 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
             } catch (NullPointerException e) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("");
             }
-        } else
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Center or Ceo Phone number is already exist");
     }
 
     @Override

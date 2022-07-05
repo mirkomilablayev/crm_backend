@@ -45,6 +45,7 @@ public class PayEduService extends AbstractService<PayEduRepo> implements BaseSe
             PayEdu save = repository.save(payEdu);
             return ResponseEntity.status(HttpStatus.OK).body(save);
         }else{
+            System.out.println("Shu yerda yuribmiz");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
         }
     }

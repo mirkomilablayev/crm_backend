@@ -21,4 +21,5 @@ public class RequestToGetDemo extends BaseEntityId implements BaseEntity {
     private String eduCenterName;
     private LocalDateTime sentAt;
     private Boolean isActive = true;
+    private Boolean isSeen = false;
 }

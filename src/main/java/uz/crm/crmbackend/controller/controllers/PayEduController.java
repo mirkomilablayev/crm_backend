@@ -2,11 +2,13 @@ package uz.crm.crmbackend.controller.controllers;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.*;
+import uz.crm.crmbackend.config.anotation.CheckRole;
 import uz.crm.crmbackend.controller.AbstractController;
 import uz.crm.crmbackend.controller.CrudController;
 import uz.crm.crmbackend.dto.eduCenterPay.PayEduCreateDto;
 import uz.crm.crmbackend.dto.eduCenterPay.PayEduUpdateDto;
 import uz.crm.crmbackend.service.services.PayEduService;
+import uz.crm.crmbackend.tools.Constant;
 
 @RestController
 @RequestMapping("/api/payEdu")
@@ -15,6 +17,7 @@ public class PayEduController extends AbstractController<PayEduService> implemen
         super(service);
     }
 
+//    @CheckRole(Constant.SUPER_ADMIN)
     @PostMapping("/createEduPay")
     @Override
     public HttpEntity<?> create(PayEduCreateDto cd) {

@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.crm.crmbackend.dto.request.RequestCreateDto;
+import uz.crm.crmbackend.dto.request.RequestShowDto;
 import uz.crm.crmbackend.dto.request.RequestUpdateDto;
 import uz.crm.crmbackend.entity.RequestToGetDemo;
 import uz.crm.crmbackend.exceptions.ResourceNotFoundException;
@@ -14,6 +15,7 @@ import uz.crm.crmbackend.service.AbstractService;
 import uz.crm.crmbackend.service.CrudService;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class RequestService extends AbstractService<RequestRepo> implements CrudService<RequestCreateDto, RequestUpdateDto> {
@@ -51,6 +53,12 @@ public class RequestService extends AbstractService<RequestRepo> implements Crud
     }
 
     public HttpEntity<?> getAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(repository.findAllByIsActive(true));
+        return ResponseEntity.status(HttpStatus.OK).body(getRequestDto(repository.findAllByIsActive(true)));
+    }
+
+    private List<RequestShowDto> getRequestDto(List<RequestToGetDemo> allByIsActive) {
+
+
+        return null;
     }
 }

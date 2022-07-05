@@ -2,8 +2,7 @@ package uz.crm.crmbackend.controller.controllers;
 
 
 import org.springframework.http.HttpEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uz.crm.crmbackend.controller.AbstractController;
 import uz.crm.crmbackend.dto.request.RequestCreateDto;
 import uz.crm.crmbackend.dto.request.RequestUpdateDto;
@@ -17,10 +16,12 @@ public class RequestController extends AbstractController<RequestService> implem
         super(service);
     }
 
+    @PostMapping("/createRequest")
     @Override
     public HttpEntity<?> create(RequestCreateDto cd) {
-        return null;
+        return service.create(cd);
     }
+
 
     @Override
     public HttpEntity<?> update(RequestUpdateDto cd) {
@@ -32,8 +33,14 @@ public class RequestController extends AbstractController<RequestService> implem
         return null;
     }
 
+    @DeleteMapping("/deleteById/{id}")
     @Override
-    public HttpEntity<?> deleteById(Long id) {
-        return null;
+    public HttpEntity<?> deleteById(@PathVariable Long id) {
+        return service.deleteById(id);
+    }
+
+    @GetMapping("/getAll")
+    public HttpEntity<?> getAll(){
+        return service.getAll();
     }
 }

@@ -3,6 +3,7 @@ package uz.crm.crmbackend.dto.request;
 import lombok.*;
 import uz.crm.crmbackend.dto.Dto;
 
+import javax.persistence.Column;
 import java.time.LocalDateTime;
 
 @Setter
@@ -11,7 +12,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RequestCreateDto implements Dto {
+    @Column(nullable = false)
     private String fullName;
+    @Column(nullable = false)
     private String phoneNumber;
-    private LocalDateTime sentAt;
+    @Column(nullable = false)
+    private String eduCenterName;
+
 }

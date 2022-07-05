@@ -18,5 +18,7 @@ import java.time.LocalDateTime;
 public class RequestToGetDemo extends BaseEntityId implements BaseEntity {
     private String fullName;
     private String phoneNumber;
+    private String eduCenterName;
     private LocalDateTime sentAt;
+    private Boolean isActive = true;
 }

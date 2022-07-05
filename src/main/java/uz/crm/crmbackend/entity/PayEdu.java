@@ -19,6 +19,7 @@ public class PayEdu extends BaseEntityId implements BaseEntity {
     private LocalDateTime endTime;
     private Double payAmount;
     private String comment;
+    private Boolean isActiveNow = true;
 
     public PayEdu(EduCenter eduCenter, LocalDateTime startTime, LocalDateTime endTime, Double payAmount, String comment) {
         this.eduCenter = eduCenter;

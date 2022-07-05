@@ -18,8 +18,10 @@ import uz.crm.crmbackend.service.AbstractService;
 import uz.crm.crmbackend.service.BaseService;
 import uz.crm.crmbackend.service.CrudService;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PayEduService extends AbstractService<PayEduRepo> implements BaseService, CrudService<PayEduCreateDto, PayEduUpdateDto> {
@@ -86,5 +88,17 @@ public class PayEduService extends AbstractService<PayEduRepo> implements BaseSe
         });
         payEduShowDto.setPaysList(pays);
         return payEduShowDto;
+    }
+
+    public HttpEntity<?> getLastPaymentInformation(Long eduCenterId) {
+        Optional<PayEdu> payEduOptional = repository.findByEduCenter_IdAndIsActiveNow(eduCenterId, true);
+        if (payEduOptional.isPresent()){
+            PayEdu payEdu = payEduOptional.get();
+            LocalDateTime endTime = payEdu.getEndTime();
+
+        }else{
+
+        }
+        return null;
     }
 }

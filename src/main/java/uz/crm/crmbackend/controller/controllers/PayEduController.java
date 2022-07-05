@@ -40,4 +40,9 @@ public class PayEduController extends AbstractController<PayEduService> implemen
     public HttpEntity<?> getEducationPayments(@PathVariable  Long eduCenterId){
         return service.getEducationPayments(eduCenterId);
     }
+
+    @GetMapping("/getLastPaymentInfo/{eduCenterId}")
+    public HttpEntity<?> getPaymentInformation(@PathVariable Long eduCenterId){
+        return service.getLastPaymentInformation(eduCenterId);
+    }
 }

@@ -28,9 +28,10 @@ public class RequestController extends AbstractController<RequestService> implem
         return null;
     }
 
+    @GetMapping("/getById/{id}")
     @Override
-    public HttpEntity<?> get(Long id) {
-        return null;
+    public HttpEntity<?> get(@PathVariable Long id) {
+        return service.get(id);
     }
 
     @DeleteMapping("/deleteById/{id}")

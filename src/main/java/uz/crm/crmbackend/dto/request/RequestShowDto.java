@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RequestShowDto {
+    private Long id;
     private String fullName;
     private String phoneNumber;
     private String eduCenterName;

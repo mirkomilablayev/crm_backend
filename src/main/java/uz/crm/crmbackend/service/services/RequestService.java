@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.crm.crmbackend.dto.request.RequestCreateDto;
+import uz.crm.crmbackend.dto.request.RequestDto;
 import uz.crm.crmbackend.dto.request.RequestShowDto;
 import uz.crm.crmbackend.dto.request.RequestUpdateDto;
 import uz.crm.crmbackend.entity.RequestToGetDemo;
@@ -15,6 +16,7 @@ import uz.crm.crmbackend.service.AbstractService;
 import uz.crm.crmbackend.service.CrudService;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -41,7 +43,16 @@ public class RequestService extends AbstractService<RequestRepo> implements Crud
 
     @Override
     public HttpEntity<?> get(Long id) {
-        return null;
+        RequestToGetDemo b = repository.findByIdAndIsActive(id, true).orElseThrow(ResourceNotFoundException::new);
+        RequestShowDto a = new RequestShowDto();
+        a.setSentAt(b.getSentAt());
+        a.setPhoneNumber(b.getPhoneNumber());
+        a.setEduCenterName(b.getEduCenterName());
+        a.setFullName(b.getFullName());
+        a.setId(b.getId());
+        b.setIsSeen(true);
+        repository.save(b);
+        return ResponseEntity.status(HttpStatus.OK).body(a);
     }
 
     @Override
@@ -56,9 +67,16 @@ public class RequestService extends AbstractService<RequestRepo> implements Crud
         return ResponseEntity.status(HttpStatus.OK).body(getRequestDto(repository.findAllByIsActive(true)));
     }
 
-    private List<RequestShowDto> getRequestDto(List<RequestToGetDemo> allByIsActive) {
-
-
-        return null;
+    private List<RequestDto> getRequestDto(List<RequestToGetDemo> allByIsActive) {
+        List<RequestDto> item = new ArrayList<>();
+        allByIsActive.forEach(a -> {
+            RequestDto b = new RequestDto();
+            b.setFullName(a.getFullName());
+            b.setSentAt(a.getSentAt());
+            b.setId(a.getId());
+            b.setIsSeen(a.getIsSeen());
+            item.add(b);
+        });
+        return item;
     }
 }

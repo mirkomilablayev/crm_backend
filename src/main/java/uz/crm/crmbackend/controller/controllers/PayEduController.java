@@ -12,6 +12,7 @@ import uz.crm.crmbackend.tools.Constant;
 
 @RestController
 @RequestMapping("/api/payEdu")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class PayEduController extends AbstractController<PayEduService> implements CrudController<PayEduCreateDto, PayEduUpdateDto> {
     public PayEduController(PayEduService service) {
         super(service);

@@ -79,4 +79,8 @@ public class RequestService extends AbstractService<RequestRepo> implements Crud
         });
         return item;
     }
+
+    public HttpEntity<?> getRequestCount() {
+        return ResponseEntity.status(HttpStatus.OK).body(repository.countAllByIsActive(true));
+    }
 }

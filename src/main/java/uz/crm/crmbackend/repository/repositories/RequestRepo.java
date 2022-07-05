@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface RequestRepo extends JpaRepository<RequestToGetDemo,Long>, BaseRepository {
     Optional<RequestToGetDemo> findByIdAndIsActive(Long id, Boolean isActive);
     List<RequestToGetDemo> findAllByIsActive(Boolean isActive);
+    Long countAllByIsActive(Boolean isActive);
 }

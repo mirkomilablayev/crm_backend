@@ -11,6 +11,7 @@ import uz.crm.crmbackend.service.services.RequestService;
 
 @RestController
 @RequestMapping("/api/request")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class RequestController extends AbstractController<RequestService> implements CrudService<RequestCreateDto, RequestUpdateDto> {
     public RequestController(RequestService service) {
         super(service);
@@ -43,5 +44,10 @@ public class RequestController extends AbstractController<RequestService> implem
     @GetMapping("/getAll")
     public HttpEntity<?> getAll(){
         return service.getAll();
+    }
+
+    @GetMapping("/getRequestCount")
+    public HttpEntity<?> getCount(){
+        return service.getRequestCount();
     }
 }

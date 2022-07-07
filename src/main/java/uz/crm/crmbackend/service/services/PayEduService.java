@@ -5,10 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import uz.crm.crmbackend.dto.eduCenterPay.PayEduCreateDto;
-import uz.crm.crmbackend.dto.eduCenterPay.PayEduShowDto;
-import uz.crm.crmbackend.dto.eduCenterPay.PayEduUpdateDto;
-import uz.crm.crmbackend.dto.eduCenterPay.Pays;
+import uz.crm.crmbackend.dto.eduCenterPay.*;
 import uz.crm.crmbackend.entity.PayEdu;
 import uz.crm.crmbackend.entity.User;
 import uz.crm.crmbackend.exceptions.ResourceNotFoundException;
@@ -101,5 +98,14 @@ public class PayEduService extends AbstractService<PayEduRepo> implements BaseSe
 
         }
         return null;
+    }
+
+    public HttpEntity<?> getLastPaymentDate(Long eduCenterId) {
+        PayEdu payEdu = repository
+                .findByEduCenter_IdAndIsActiveNow(eduCenterId, true)
+                .orElseThrow(ResourceNotFoundException::new);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new LastPaymentDateDto(payEdu.getEndTime(), payEdu.getEndTime().plusMonths(1)));
     }
 }

@@ -23,6 +23,7 @@ import java.util.Optional;
 @Service
 public class PayEduService extends AbstractService<PayEduRepo> implements BaseService, CrudService<PayEduCreateDto, PayEduUpdateDto> {
     private final EduCenterRepo eduCenterRepo;
+
     public PayEduService(PayEduRepo repository, EduCenterRepo eduCenterRepo) {
         super(repository);
         this.eduCenterRepo = eduCenterRepo;
@@ -31,20 +32,30 @@ public class PayEduService extends AbstractService<PayEduRepo> implements BaseSe
 
     @Override
     public HttpEntity<?> create(PayEduCreateDto cd) {
-        if (cd.getStartTime().isBefore(cd.getEndTime()) && cd.getPayAmount() >= 0){
-            PayEdu payEdu = new PayEdu(
-                    eduCenterRepo.findByIdAndIsArchived(cd.getEduCenterId(),true).orElseThrow(ResourceNotFoundException::new),
-                    cd.getStartTime(),
-                    cd.getEndTime(),
-                    cd.getPayAmount(),
-                    cd.getComment()
-            );
-            PayEdu save = repository.save(payEdu);
-            return ResponseEntity.status(HttpStatus.OK).body(save);
-        }else{
-            System.out.println("Shu yerda yuribmiz");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Something went wrong");
+        Optional<PayEdu> payEduOptional = repository
+                .findByEduCenter_IdAndIsActiveNow(cd.getEduCenterId(), true);
+
+        if (payEduOptional.isPresent()) {
+            PayEdu payEdu = payEduOptional.get();
+            payEdu.setIsActiveNow(false);
+            repository.save(payEdu);
+            return savePayEdu(cd);
+        } else {
+            return savePayEdu(cd);
         }
+    }
+
+    private ResponseEntity<PayEdu> savePayEdu(PayEduCreateDto cd) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(repository.save(new PayEdu(
+                        eduCenterRepo.findByIdAndIsArchived(cd.getEduCenterId(), false)
+                                .orElseThrow(ResourceNotFoundException::new),
+                        cd.getStartTime(),
+                        cd.getEndTime(),
+                        cd.getPayAmount(),
+                        cd.getComment()
+                )));
     }
 
     @Override
@@ -63,38 +74,19 @@ public class PayEduService extends AbstractService<PayEduRepo> implements BaseSe
     }
 
 
-    public HttpEntity<?> getEducationPayments(Long eduCenterId){
-        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<PayEdu> payEduList = repository.findAllByEduCenter_Id(eduCenterId);
-        return ResponseEntity.status(HttpStatus.OK).body(makePayEduShow(payEduList,eduCenterId));
+    public HttpEntity<?> getEducationPayments(Long eduCenterId) {
+        return null;
     }
 
-    private PayEduShowDto makePayEduShow(List<PayEdu> payEduList, Long eduCenterId) {
-        PayEduShowDto payEduShowDto = new PayEduShowDto();
-        payEduShowDto.setEduCenterId(eduCenterId);
-        payEduShowDto.setEduCenterName(
-                eduCenterRepo.findByIdAndIsArchived(eduCenterId,false)
-                        .orElseThrow(ResourceNotFoundException::new).getEdu_centerName()
-        );
-        List<Pays> pays = new ArrayList<>();
-        payEduList.forEach(a -> {
-            Pays b = new Pays();
-            b.setPayAmount(a.getPayAmount());
-            b.setStartTime(a.getStartTime());
-            b.setStartEnd(a.getEndTime());
-            pays.add(b);
-        });
-        payEduShowDto.setPaysList(pays);
-        return payEduShowDto;
-    }
+
 
     public HttpEntity<?> getLastPaymentInformation(Long eduCenterId) {
         Optional<PayEdu> payEduOptional = repository.findByEduCenter_IdAndIsActiveNow(eduCenterId, true);
-        if (payEduOptional.isPresent()){
+        if (payEduOptional.isPresent()) {
             PayEdu payEdu = payEduOptional.get();
             LocalDateTime endTime = payEdu.getEndTime();
 
-        }else{
+        } else {
 
         }
         return null;
@@ -107,5 +99,9 @@ public class PayEduService extends AbstractService<PayEduRepo> implements BaseSe
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new LastPaymentDateDto(payEdu.getEndTime(), payEdu.getEndTime().plusMonths(1)));
+    }
+
+    public HttpEntity<?> getPaymentsCount(){
+        return ResponseEntity.status(HttpStatus.OK).body(repository.sumAllPayments());
     }
 }

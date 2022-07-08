@@ -75,30 +75,26 @@ public class PayEduService extends AbstractService<PayEduRepo> implements BaseSe
 
 
     public HttpEntity<?> getEducationPayments(Long eduCenterId) {
+        List<PayEdu> all = repository.findAllByEduCenter_Id(eduCenterId);
+        PayEduShowDto res = new PayEduShowDto();
+        List<Pays> paysList = new ArrayList<>();
+        res.setEduCenterId(eduCenterId);
+        res.setEduCenterName(eduCenterRepo.findByIdAndIsArchived(eduCenterId,false).get().getEdu_centerName());
         return null;
     }
 
 
 
-    public HttpEntity<?> getLastPaymentInformation(Long eduCenterId) {
-        Optional<PayEdu> payEduOptional = repository.findByEduCenter_IdAndIsActiveNow(eduCenterId, true);
-        if (payEduOptional.isPresent()) {
-            PayEdu payEdu = payEduOptional.get();
-            LocalDateTime endTime = payEdu.getEndTime();
 
-        } else {
-
-        }
-        return null;
-    }
 
     public HttpEntity<?> getLastPaymentDate(Long eduCenterId) {
-        PayEdu payEdu = repository
-                .findByEduCenter_IdAndIsActiveNow(eduCenterId, true)
-                .orElseThrow(ResourceNotFoundException::new);
+        Optional<PayEdu> optionalPayEdu = repository
+                .findByEduCenter_IdAndIsActiveNow(eduCenterId, true);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(new LastPaymentDateDto(payEdu.getEndTime(), payEdu.getEndTime().plusMonths(1)));
+                .body(optionalPayEdu.map(payEdu ->
+                        new LastPaymentDateDto(payEdu.getEndTime(), payEdu.getEndTime().plusMonths(1)))
+                        .orElseGet(() ->  new LastPaymentDateDto(LocalDateTime.now(), LocalDateTime.now().plusMonths(1))));
     }
 
     public HttpEntity<?> getPaymentsCount(){

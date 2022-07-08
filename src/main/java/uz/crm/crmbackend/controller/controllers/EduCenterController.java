@@ -7,11 +7,9 @@ import uz.crm.crmbackend.controller.AbstractController;
 import uz.crm.crmbackend.controller.CrudController;
 import uz.crm.crmbackend.dto.eduCenter.EduCenCreateDto;
 import uz.crm.crmbackend.dto.eduCenter.EduCenUpdateDto;
-import uz.crm.crmbackend.entity.EduCenter;
 import uz.crm.crmbackend.service.services.EduCenterService;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.Path;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")

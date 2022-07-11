@@ -12,4 +12,5 @@ public interface EduCenterRepo extends JpaRepository<EduCenter,Long> , BaseRepos
     Boolean existsByCeoPhoneAndIsArchived(String ceoPhone, Boolean isArchived);
     List<EduCenter> findAllByIsArchived(Boolean isArchived);
     Optional<EduCenter> findByIdAndIsArchived(Long id, Boolean isArchived);
+    Boolean existsByIdAndIsArchived(Long id, Boolean isArchived);
 }

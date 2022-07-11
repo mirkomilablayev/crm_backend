@@ -38,7 +38,7 @@ public class EduCenterController extends AbstractController<EduCenterService> im
     @GetMapping("/getOneEduCenter/{id}")
     @Override
     public HttpEntity<?> get(Long id) {
-        return service.get(id);
+            return service.get(id);
     }
 
     @DeleteMapping("/delete/{id}")

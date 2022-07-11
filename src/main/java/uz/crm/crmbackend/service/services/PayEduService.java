@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import uz.crm.crmbackend.dto.eduCenterPay.*;
 import uz.crm.crmbackend.entity.PayEdu;
+import uz.crm.crmbackend.exceptions.ConflictException;
 import uz.crm.crmbackend.exceptions.ResourceNotFoundException;
 import uz.crm.crmbackend.repository.repositories.EduCenterRepo;
 import uz.crm.crmbackend.repository.repositories.PayEduRepo;
@@ -88,6 +89,10 @@ public class PayEduService extends AbstractService<PayEduRepo> implements BaseSe
     public HttpEntity<?> getLastPaymentDate(Long eduCenterId) {
         Optional<PayEdu> optionalPayEdu = repository
                 .findByEduCenter_IdAndIsActiveNow(eduCenterId, true);
+
+        if (eduCenterRepo.existsByIdAndIsArchived(eduCenterId,false))
+            throw new ConflictException("This edu center doesn't exists");
+
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(optionalPayEdu.map(payEdu ->

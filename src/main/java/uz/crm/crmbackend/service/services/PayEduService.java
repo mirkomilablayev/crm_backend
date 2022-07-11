@@ -79,7 +79,15 @@ public class PayEduService extends AbstractService<PayEduRepo> implements BaseSe
         List<Pays> paysList = new ArrayList<>();
         res.setEduCenterId(eduCenterId);
         res.setEduCenterName(eduCenterRepo.findByIdAndIsArchived(eduCenterId,false).get().getEdu_centerName());
-        return null;
+        all.forEach(payEdu -> {
+            Pays pays = new Pays();
+            pays.setStartTime(payEdu.getStartTime());
+            pays.setStartEnd(payEdu.getEndTime());
+            pays.setPayAmount(payEdu.getPayAmount());
+            paysList.add(pays);
+        });
+        res.setPaysList(paysList);
+        return ResponseEntity.status(HttpStatus.OK).body("Success");
     }
 
 

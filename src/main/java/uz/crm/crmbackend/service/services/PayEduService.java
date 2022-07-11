@@ -78,7 +78,7 @@ public class PayEduService extends AbstractService<PayEduRepo> implements BaseSe
         PayEduShowDto res = new PayEduShowDto();
         List<Pays> paysList = new ArrayList<>();
         res.setEduCenterId(eduCenterId);
-        res.setEduCenterName(eduCenterRepo.findByIdAndIsArchived(eduCenterId,false).get().getEdu_centerName());
+        res.setEduCenterName(eduCenterRepo.findByIdAndIsArchived(eduCenterId, false).get().getEdu_centerName());
         all.forEach(payEdu -> {
             Pays pays = new Pays();
             pays.setStartTime(payEdu.getStartTime());
@@ -87,28 +87,29 @@ public class PayEduService extends AbstractService<PayEduRepo> implements BaseSe
             paysList.add(pays);
         });
         res.setPaysList(paysList);
-        return ResponseEntity.status(HttpStatus.OK).body("Success");
+        return ResponseEntity.status(HttpStatus.OK).body(res);
     }
-
-
-
 
 
     public HttpEntity<?> getLastPaymentDate(Long eduCenterId) {
         Optional<PayEdu> optionalPayEdu = repository
                 .findByEduCenter_IdAndIsActiveNow(eduCenterId, true);
 
-        if (eduCenterRepo.existsByIdAndIsArchived(eduCenterId,false))
+        if (!eduCenterRepo.existsByIdAndIsArchived(eduCenterId, false))
             throw new ConflictException("This edu center doesn't exists");
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(optionalPayEdu.map(payEdu ->
-                        new LastPaymentDateDto(payEdu.getEndTime(), payEdu.getEndTime().plusMonths(1)))
-                        .orElseGet(() ->  new LastPaymentDateDto(LocalDateTime.now(), LocalDateTime.now().plusMonths(1))));
+                .body(optionalPayEdu.map(payEdu -> new LastPaymentDateDto(payEdu.getEndTime(), payEdu.getEndTime().plusMonths(1))).orElseGet(() -> new LastPaymentDateDto(LocalDateTime.now(), LocalDateTime.now().plusMonths(1))));
     }
 
-    public HttpEntity<?> getPaymentsCount(){
-        return ResponseEntity.status(HttpStatus.OK).body(repository.sumAllPayments());
+    public HttpEntity<?> getPaymentsCount() {
+        return ResponseEntity.status(HttpStatus.OK).body(new PayAmount(repository.sumAllPayments()));
+    }
+
+    public HttpEntity<?> getAllPayments() {
+
+
+        return null;
     }
 }

@@ -12,7 +12,7 @@ public interface PayEduRepo extends JpaRepository<PayEdu,Long> , BaseRepository 
     List<PayEdu> findAllByEduCenter_Id(Long eduCenter_id);
     Optional<PayEdu> findByEduCenter_IdAndIsActiveNow(Long eduCenter_id, Boolean isActiveNow);
     Boolean existsByEduCenter_Id(Long eduCenter_id);
-
+    List<PayEdu> findByIsActiveNow(Boolean isActiveNow);
 
     @Query(nativeQuery = true, value = "select sum(pay_amount) from pay_edu")
     Double sumAllPayments();

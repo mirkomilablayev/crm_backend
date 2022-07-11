@@ -108,8 +108,18 @@ public class PayEduService extends AbstractService<PayEduRepo> implements BaseSe
     }
 
     public HttpEntity<?> getAllPayments() {
-
-
-        return null;
+        List<PayEdu> list = repository.findByIsActiveNow(true);
+        List<PayAllEduShowDto> res = new ArrayList<>();
+        list.forEach(a -> {
+            PayAllEduShowDto item = new PayAllEduShowDto();
+            item.setAmount(a.getPayAmount());
+            item.setFromDate(a.getStartTime());
+            item.setToDate(a.getEndTime());
+            item.setEduCenterId(a.getEduCenter().getId());
+            item.setEduCenterName(a.getEduCenter().getEdu_centerName());
+            item.setId(a.getId());
+            res.add(item);
+        });
+        return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 }

@@ -176,12 +176,18 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
         eduCenters.forEach(a -> {
             EduCenterShowDto item = new EduCenterShowDto();
             item.setId(a.getId());
+            User user = userRepo.getUser(a.getId()).orElseThrow(ResourceNotFoundException::new);
+            item.setAdminId(user.getId());
+            item.setAdminName(user.getFullName());
+            item.setUsername(user.getUsername());
+            item.setPassword(user.getPassword());
             item.setEduCenterName(a.getEdu_centerName());
             if (a.getCenterStatus() != null)
                 item.setStatus(a.getCenterStatus().getName());
             item.setCeo(a.getCeo_full_name());
             item.setPhoneNumber(a.getCenterPhone());
             item.setJoiningAt(timeFormatter(a.getAddedAt()));
+
             if (a.getLogoFile() != null)
                 item.setLogoId(a.getLogoFile().getId());
             eduCenterShowDtos.add(item);

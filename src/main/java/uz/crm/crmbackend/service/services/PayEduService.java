@@ -100,7 +100,9 @@ public class PayEduService extends AbstractService<PayEduRepo> implements BaseSe
     }
 
     public HttpEntity<?> getPaymentsCount() {
-        return ResponseEntity.status(HttpStatus.OK).body(new PayAmount(repository.sumAllPayments()));
+        double  aDouble = repository.getAllPayAmountSum();
+        PayAmount payAmount = new PayAmount(aDouble);
+        return ResponseEntity.status(HttpStatus.OK).body(payAmount);
     }
 
     @Scheduled(fixedRate = 60 * 60 * 12 * 1000)

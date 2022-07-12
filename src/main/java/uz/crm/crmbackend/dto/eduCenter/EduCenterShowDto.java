@@ -13,4 +13,8 @@ public class EduCenterShowDto {
     private String phoneNumber;
     private String ceo;
     private Long logoId;
+    private Long adminId;
+    private String adminName;
+    private String username;
+    private String password;
 }

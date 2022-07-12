@@ -18,7 +18,9 @@ public interface PayEduRepo extends JpaRepository<PayEdu,Long> , BaseRepository 
     List<PayEdu> findByIsActiveNow(Boolean isActiveNow);
 
 
-    @Modifying
-    @Query(nativeQuery = true, value = "select sum(pay_amount) from pay_edu")
-    Double sumAllPayments();
+
+    @Query(value = "SELECT case when SUM(pay_amount) IS NULL then 0 else sum(pay_amount) end\n" +
+            "           AS total\n" +
+            "FROM pay_edu" ,nativeQuery = true)
+    double getAllPayAmountSum();
 }

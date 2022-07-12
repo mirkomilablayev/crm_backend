@@ -2,8 +2,11 @@ package uz.crm.crmbackend.controller.controllers;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import uz.crm.crmbackend.service.services.UserService;
 
 @RestController
@@ -12,7 +15,8 @@ import uz.crm.crmbackend.service.services.UserService;
 public class UserController {
     private final UserService userService;
 
-    public void saveUserPhoto(){
-
+    @PostMapping("/saveUserLogo")
+    public HttpEntity<?> saveFile(MultipartHttpServletRequest request){
+        return userService.saveFile(request);
     }
 }

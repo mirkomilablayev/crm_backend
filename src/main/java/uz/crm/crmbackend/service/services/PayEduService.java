@@ -57,6 +57,9 @@ public class PayEduService extends AbstractService<PayEduRepo> implements BaseSe
     }
 
     private ResponseEntity<PayEdu> savePayEdu(PayEduCreateDto cd) {
+        if (cd.getEndTime().isEqual(LocalDateTime.now()) || cd.getEndTime().isAfter(LocalDateTime.now())){
+            throw new ConflictException("");
+        }
         return ResponseEntity.status(HttpStatus.OK).body(repository.save(new PayEdu(eduCenterRepo.findByIdAndIsArchived(cd.getEduCenterId(), false).orElseThrow(ResourceNotFoundException::new), cd.getStartTime(), cd.getEndTime(), cd.getPayAmount(), cd.getComment())));
     }
 

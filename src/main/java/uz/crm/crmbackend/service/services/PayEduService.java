@@ -42,11 +42,15 @@ public class PayEduService extends AbstractService<PayEduRepo> implements BaseSe
 
         if (payEduOptional.isPresent()) {
             PayEdu payEdu = payEduOptional.get();
-            payEdu.setIsActiveNow(false);
-            repository.save(payEdu);
-            EduCenter eduCenter = eduCenterRepo.findByIdAndIsArchived(cd.getEduCenterId(), false).orElseThrow(ResourceNotFoundException::new);
-            eduCenter.setCenterStatus(centerStatusRepo.findByName(Constant.status1).orElseThrow(ResourceNotFoundException::new));
-            return savePayEdu(cd);
+            if (payEdu.getEndTime().isEqual(LocalDateTime.now()) || payEdu.getEndTime().isAfter(LocalDateTime.now())) {
+                payEdu.setIsActiveNow(false);
+                repository.save(payEdu);
+                EduCenter eduCenter = eduCenterRepo.findByIdAndIsArchived(cd.getEduCenterId(), false).orElseThrow(ResourceNotFoundException::new);
+                eduCenter.setCenterStatus(centerStatusRepo.findByName(Constant.status1).orElseThrow(ResourceNotFoundException::new));
+                return savePayEdu(cd);
+            }else{
+                throw new ConflictException("");
+            }
         } else {
             return savePayEdu(cd);
         }
@@ -77,7 +81,7 @@ public class PayEduService extends AbstractService<PayEduRepo> implements BaseSe
         PayEduShowDto res = new PayEduShowDto();
         List<Pays> paysList = new ArrayList<>();
         res.setEduCenterId(eduCenterId);
-        res.setEduCenterName(eduCenterRepo.findByIdAndIsArchived(eduCenterId, false).get().getEdu_centerName());
+        res.setEduCenterName(eduCenterRepo.findByIdAndIsArchived(eduCenterId, false).orElseThrow(ResourceNotFoundException::new).getEdu_centerName());
         all.forEach(payEdu -> {
             Pays pays = new Pays();
             pays.setStartTime(payEdu.getStartTime());

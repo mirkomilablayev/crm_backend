@@ -51,8 +51,8 @@ public class PayEduController extends AbstractController<PayEduService> implemen
     }
 
 
-    @PostMapping("/getLastPaymentDate")
-    public HttpEntity<?> getLastPaymentDate(@RequestBody Long eduCenterId){
+    @PostMapping("/getLastPaymentDate/{eduCenterId}")
+    public HttpEntity<?> getLastPaymentDate(@PathVariable Long eduCenterId){
         return service.getLastPaymentDate(eduCenterId);
     }
 

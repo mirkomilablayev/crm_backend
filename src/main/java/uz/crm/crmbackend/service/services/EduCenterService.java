@@ -60,7 +60,7 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
             EduCenter eduCenter = new EduCenter();
             eduCenter.setCenterPhone(cd.getCenterPhone());
             eduCenter.setCenterStir(cd.getCenterStir());
-            eduCenter.setCenterStatus(centerStatusRepo.findByName("Demo").orElseThrow(() -> new ResourceNotFoundException("")));
+            eduCenter.setCenterStatus(centerStatusRepo.findByName(Constant.status2).orElseThrow(() -> new ResourceNotFoundException("")));
             eduCenter.setEdu_centerName(cd.getEdu_centerName());
             eduCenter.setCeoPhone(cd.getCeoPhone());
             eduCenter.setCeo_full_name(cd.getCeo_full_name());

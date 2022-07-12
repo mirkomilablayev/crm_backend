@@ -12,17 +12,11 @@ import uz.crm.crmbackend.dto.eduCenter.EduCenCreateDto;
 import uz.crm.crmbackend.dto.eduCenter.EduCenUpdateDto;
 import uz.crm.crmbackend.dto.eduCenter.EduCenterSelectInfo;
 import uz.crm.crmbackend.dto.eduCenter.EduCenterShowDto;
-import uz.crm.crmbackend.entity.CenterStatus;
-import uz.crm.crmbackend.entity.EduCenter;
-import uz.crm.crmbackend.entity.File;
-import uz.crm.crmbackend.entity.User;
+import uz.crm.crmbackend.entity.*;
 import uz.crm.crmbackend.exceptions.ConflictException;
 import uz.crm.crmbackend.exceptions.ResourceNotFoundException;
 import uz.crm.crmbackend.exceptions.UsernameAlreadyRegisterException;
-import uz.crm.crmbackend.repository.repositories.CenterStatusRepo;
-import uz.crm.crmbackend.repository.repositories.EduCenterRepo;
-import uz.crm.crmbackend.repository.repositories.FileRepo;
-import uz.crm.crmbackend.repository.repositories.UserRepo;
+import uz.crm.crmbackend.repository.repositories.*;
 import uz.crm.crmbackend.service.AbstractService;
 import uz.crm.crmbackend.service.BaseService;
 import uz.crm.crmbackend.service.CrudService;
@@ -44,13 +38,15 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
     private final PasswordEncoder passwordEncoder;
     private final UserRepo userRepo;
     private final FileRepo fileRepo;
+    private final RoleRepo roleRepo;
 
-    public EduCenterService(FileRepo fileRepo, UserRepo userRepo, PasswordEncoder passwordEncoder, EduCenterRepo repository, CenterStatusRepo centerStatusRepo) {
+    public EduCenterService(RoleRepo roleRepo, FileRepo fileRepo, UserRepo userRepo, PasswordEncoder passwordEncoder, EduCenterRepo repository, CenterStatusRepo centerStatusRepo) {
         super(repository);
         this.passwordEncoder = passwordEncoder;
         this.userRepo = userRepo;
         this.centerStatusRepo = centerStatusRepo;
         this.fileRepo = fileRepo;
+        this.roleRepo = roleRepo;
     }
 
 
@@ -71,7 +67,7 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
                 eduCenter.setLogoFile(fileRepo.findByIdAndIsActive(cd.getLogoId(), true).orElseThrow(ResourceNotFoundException::new));
             }
 
-            if (userRepo.existsByUsernameAndIsDeleted(cd.getAdminUsername(),false)) {
+            if (userRepo.existsByUsernameAndIsDeleted(cd.getAdminUsername(), false)) {
                 throw new UsernameAlreadyRegisterException("s");
             }
             EduCenter save = repository.save(eduCenter);
@@ -80,6 +76,9 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
             user.setFullName(cd.getAdminFullName());
             user.setUsername(cd.getAdminUsername());
             user.setEduCenter(save);
+            Set<UserRole> roles = new HashSet<>();
+            roles.add(roleRepo.findByNameAndIsActive(Constant.ADMIN,true).orElseThrow(ResourceNotFoundException::new));
+            user.setUserRoleSet(roles);
             user.setPassword(passwordEncoder.encode(cd.getAdminPassword()));
             userRepo.save(user);
             return ResponseEntity.status(HttpStatus.OK).body("Success");
@@ -176,7 +175,13 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
         eduCenters.forEach(a -> {
             EduCenterShowDto item = new EduCenterShowDto();
             item.setId(a.getId());
-            User user = userRepo.getUser(a.getId()).orElseThrow(ResourceNotFoundException::new);
+            User user;
+            try {
+                user = getAdministrator(a.getId());
+            } catch (NullPointerException e) {
+                throw new ConflictException("");
+            }
+            assert user != null;
             item.setAdminId(user.getId());
             item.setAdminName(user.getFullName());
             item.setUsername(user.getUsername());
@@ -193,6 +198,21 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
             eduCenterShowDtos.add(item);
         });
         return eduCenterShowDtos;
+    }
+
+    private User getAdministrator(Long id) {
+        for (User user : userRepo.findAllByEduCenter_IdAndIsDeleted(id, false)) {
+            boolean flag = false;
+            for (UserRole userRole : user.getUserRoleSet()) {
+                if (userRole.getName().equals(Constant.ADMIN)) {
+                    flag = true;
+                    break;
+                }
+            }
+            if (flag)
+            return user;
+        }
+        return null;
     }
 
     private String timeFormatter(LocalDateTime addedAt) {

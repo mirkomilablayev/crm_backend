@@ -51,6 +51,7 @@ public class UserService {
                 e.printStackTrace();
             }
             User currentUser = util.getCurrentUser();
+            currentUser.setLogoFile(save);
             return ResponseEntity.status(HttpStatus.OK).body(save.getId());
         }
         return ResponseEntity.status(HttpStatus.CONFLICT).body("Something went wrong");

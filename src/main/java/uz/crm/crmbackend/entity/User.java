@@ -24,8 +24,8 @@ public class User extends BaseEntityId implements UserDetails, BaseEntity {
     private String phoneNumber;
     @ManyToOne
     private EduCenter eduCenter;
-    @OneToMany
-    private List<File> logoFile;
+    @ManyToOne
+    private File logoFile;
 
     @Column(nullable = false)
     private String username;

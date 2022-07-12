@@ -33,4 +33,9 @@ public class Util {
                         .getPrincipal()
         );
     }
+
+
+    public boolean checkBlank(String str) {
+        return !str.trim().isEmpty();
+    }
 }

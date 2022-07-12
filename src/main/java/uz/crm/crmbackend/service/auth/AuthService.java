@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -43,7 +44,6 @@ public class AuthService implements UserDetailsService , BaseService {
             user.setPhoneNumber(cd.getPhoneNumber());
             user.setUsername(cd.getUsername());
             user.setFullName(cd.getFullName());
-
             user.setUserRoleSet(userRoles);
             return ResponseEntity.status(HttpStatus.OK).body(userRepo.save(user));
         }

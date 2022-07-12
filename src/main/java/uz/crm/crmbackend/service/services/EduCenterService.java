@@ -21,6 +21,7 @@ import uz.crm.crmbackend.service.AbstractService;
 import uz.crm.crmbackend.service.BaseService;
 import uz.crm.crmbackend.service.CrudService;
 import uz.crm.crmbackend.tools.Constant;
+import uz.crm.crmbackend.tools.Util;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileInputStream;
@@ -39,14 +40,16 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
     private final UserRepo userRepo;
     private final FileRepo fileRepo;
     private final RoleRepo roleRepo;
+    private final Util util;
 
-    public EduCenterService(RoleRepo roleRepo, FileRepo fileRepo, UserRepo userRepo, PasswordEncoder passwordEncoder, EduCenterRepo repository, CenterStatusRepo centerStatusRepo) {
+    public EduCenterService(Util util, RoleRepo roleRepo, FileRepo fileRepo, UserRepo userRepo, PasswordEncoder passwordEncoder, EduCenterRepo repository, CenterStatusRepo centerStatusRepo) {
         super(repository);
         this.passwordEncoder = passwordEncoder;
         this.userRepo = userRepo;
         this.centerStatusRepo = centerStatusRepo;
         this.fileRepo = fileRepo;
         this.roleRepo = roleRepo;
+        this.util = util;
     }
 
 
@@ -77,7 +80,7 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
             user.setUsername(cd.getAdminUsername());
             user.setEduCenter(save);
             Set<UserRole> roles = new HashSet<>();
-            roles.add(roleRepo.findByNameAndIsActive(Constant.ADMIN,true).orElseThrow(ResourceNotFoundException::new));
+            roles.add(roleRepo.findByNameAndIsActive(Constant.ADMIN, true).orElseThrow(ResourceNotFoundException::new));
             user.setUserRoleSet(roles);
             user.setPassword(passwordEncoder.encode(cd.getAdminPassword()));
             userRepo.save(user);
@@ -92,37 +95,37 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
         EduCenter eduCenter = repository.findByIdAndIsArchived(cd.getEduCenterId(), false).orElseThrow(() -> new ResourceNotFoundException(""));
 
         if (cd.getEdu_centerName() != null
-                && checkBlank(cd.getEdu_centerName())
+                && util.checkBlank(cd.getEdu_centerName())
                 && !eduCenter.getEdu_centerName().equals(cd.getEdu_centerName())) {
             eduCenter.setEdu_centerName(cd.getEdu_centerName());
         }
 
         if (cd.getCenterPhone() != null
-                && checkBlank(cd.getCenterPhone())
+                && util.checkBlank(cd.getCenterPhone())
                 && !eduCenter.getCenterPhone().equals(cd.getCenterPhone())) {
             eduCenter.setCenterPhone(cd.getCenterPhone());
         }
 
         if (cd.getCenterStir() != null
-                && checkBlank(cd.getCenterStir())
+                && util.checkBlank(cd.getCenterStir())
                 && !eduCenter.getCenterStir().equals(cd.getCenterStir())) {
             eduCenter.setCenterStir(cd.getCenterStir());
         }
 
         if (cd.getCeo_full_name() != null
-                && checkBlank(cd.getCeo_full_name())
+                && util.checkBlank(cd.getCeo_full_name())
                 && !eduCenter.getCeo_full_name().equals(cd.getCeo_full_name())) {
             eduCenter.setCeo_full_name(cd.getCeo_full_name());
         }
 
         if (cd.getCeoPhone() != null
-                && checkBlank(cd.getCeoPhone())
+                && util.checkBlank(cd.getCeoPhone())
                 && !eduCenter.getCeoPhone().equals(cd.getCeoPhone())) {
             eduCenter.setCeoPhone(cd.getCeoPhone());
         }
 
         if (cd.getCenterStatusName() != null
-                && checkBlank(cd.getCenterStatusName())
+                && util.checkBlank(cd.getCenterStatusName())
                 && !eduCenter.getCenterStatus().getName().equals(cd.getCenterStatusName())) {
             eduCenter.setCenterStatus(centerStatusRepo.findByName(cd.getCenterStatusName())
                     .orElseThrow(ResourceNotFoundException::new));
@@ -210,7 +213,7 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
                 }
             }
             if (flag)
-            return user;
+                return user;
         }
         return null;
     }
@@ -307,9 +310,6 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
         return ResponseEntity.status(HttpStatus.OK).body("Success");
     }
 
-    public boolean checkBlank(String str) {
-        return !str.trim().isEmpty();
-    }
 
     public HttpEntity<?> changeStatus(Long eduCenterId) {
         EduCenter eduCenter = repository.findByIdAndIsArchived(eduCenterId, false).orElseThrow(ResourceNotFoundException::new);

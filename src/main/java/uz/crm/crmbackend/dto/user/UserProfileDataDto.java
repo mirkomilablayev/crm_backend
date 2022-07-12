@@ -7,8 +7,12 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserProfilePhoto {
+public class UserProfileDataDto {
+    private Long userId;
     private String fullName;
+    private String phoneNumber;
     private Long logoId;
 
+    private String username;
+    private String password;
 }

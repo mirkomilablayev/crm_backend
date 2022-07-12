@@ -8,6 +8,7 @@ import lombok.*;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserUpdateDto {
+public class UpdateProfileDataDto {
     private String fullName;
+    private String phoneNumber;
 }

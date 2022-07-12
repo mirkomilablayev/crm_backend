@@ -42,9 +42,9 @@ public class DataLoader implements CommandLineRunner {
             roleRepo.save(new UserRole(Constant.TEACHER));
 
 
-            centerStatusRepo.save(new CenterStatus("Active"));
-            centerStatusRepo.save(new CenterStatus("UnActive"));
-            centerStatusRepo.save(new CenterStatus("Demo"));
+            centerStatusRepo.save(new CenterStatus(Constant.status1));
+            centerStatusRepo.save(new CenterStatus(Constant.status2));
+            centerStatusRepo.save(new CenterStatus(Constant.status3));
 
 
             // this is super admin

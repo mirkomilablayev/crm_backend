@@ -18,6 +18,7 @@ import uz.crm.crmbackend.entity.File;
 import uz.crm.crmbackend.entity.User;
 import uz.crm.crmbackend.exceptions.ConflictException;
 import uz.crm.crmbackend.exceptions.ResourceNotFoundException;
+import uz.crm.crmbackend.exceptions.UsernameAlreadyRegisterException;
 import uz.crm.crmbackend.repository.repositories.CenterStatusRepo;
 import uz.crm.crmbackend.repository.repositories.EduCenterRepo;
 import uz.crm.crmbackend.repository.repositories.FileRepo;
@@ -68,6 +69,10 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
             eduCenter.setIsArchived(false);
             if (cd.getLogoId() != null && cd.getLogoId() > 0) {
                 eduCenter.setLogoFile(fileRepo.findByIdAndIsActive(cd.getLogoId(), true).orElseThrow(ResourceNotFoundException::new));
+            }
+
+            if (userRepo.existsByUsernameAndIsDeleted(cd.getAdminUsername(),false)) {
+                throw new UsernameAlreadyRegisterException("s");
             }
             EduCenter save = repository.save(eduCenter);
 
@@ -140,7 +145,6 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
             eduCenterShowDto.setId(eduCenter.getId());
             eduCenterShowDto.setEduCenterName(eduCenter.getEdu_centerName());
             eduCenterShowDto.setStatus(eduCenter.getCenterStatus().getName());
-            eduCenterShowDto.setJoiningAt(timeFormatter(eduCenter.getStartTime()));
             eduCenterShowDto.setPhoneNumber(eduCenter.getCenterPhone());
             if (eduCenter.getLogoFile() != null && eduCenter.getLogoFile().getId() > 0)
                 eduCenterShowDto.setLogoId(eduCenter.getLogoFile().getId());

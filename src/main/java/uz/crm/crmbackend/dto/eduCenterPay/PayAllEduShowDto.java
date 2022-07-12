@@ -17,5 +17,6 @@ public class PayAllEduShowDto {
     private LocalDateTime fromDate;
     private LocalDateTime toDate;
     private Double amount;
+    private String comment;
 
 }

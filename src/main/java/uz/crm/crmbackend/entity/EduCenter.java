@@ -20,8 +20,6 @@ public class EduCenter extends BaseEntityId implements BaseEntity {
     private String ceo_full_name;
     private String ceoPhone;
     private String centerStir;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
     private Boolean isArchived = false;
 
 

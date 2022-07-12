@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import uz.crm.crmbackend.config.anotation.CheckRole;
 import uz.crm.crmbackend.controller.AbstractController;
 import uz.crm.crmbackend.controller.CrudController;
+import uz.crm.crmbackend.dto.eduCenterPay.IdObject;
 import uz.crm.crmbackend.dto.eduCenterPay.PayEduCreateDto;
 import uz.crm.crmbackend.dto.eduCenterPay.PayEduUpdateDto;
 import uz.crm.crmbackend.service.services.PayEduService;
@@ -52,8 +53,8 @@ public class PayEduController extends AbstractController<PayEduService> implemen
 
 
     @PostMapping("/getLastPaymentDate")
-    public HttpEntity<?> getLastPaymentDate(@RequestBody Long eduCenterId){
-        return service.getLastPaymentDate(eduCenterId);
+    public HttpEntity<?> getLastPaymentDate(@RequestBody IdObject idObject){
+        return service.getLastPaymentDate(idObject.getEduCenterId());
     }
 
 

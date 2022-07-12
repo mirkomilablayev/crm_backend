@@ -1,4 +1,4 @@
-package uz.crm.crmbackend.dto.auth;
+package uz.crm.crmbackend.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

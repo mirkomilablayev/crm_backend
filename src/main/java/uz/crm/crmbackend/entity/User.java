@@ -21,10 +21,9 @@ import java.util.Set;
 @Entity(name = "users")
 public class User extends BaseEntityId implements UserDetails, BaseEntity {
     private String fullName;
-    private String passportSerialNum;
     private String phoneNumber;
-    @ManyToMany
-    private List<EduCenter> eduCenter;
+    @ManyToOne
+    private EduCenter eduCenter;
     @OneToMany
     private List<File> logoFile;
 

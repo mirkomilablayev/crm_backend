@@ -79,7 +79,7 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
             User user = new User();
             user.setFullName(cd.getAdminFullName());
             user.setUsername(cd.getAdminUsername());
-            user.setEduCenter(new ArrayList<>(List.of(save)));
+            user.setEduCenter(save);
             user.setPassword(passwordEncoder.encode(cd.getAdminPassword()));
             userRepo.save(user);
             return ResponseEntity.status(HttpStatus.OK).body("Success");

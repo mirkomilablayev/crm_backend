@@ -7,7 +7,6 @@ import uz.crm.crmbackend.entity.baseEntities.BaseEntityId;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -15,13 +14,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ToString
 @Entity
-public class Group extends BaseEntityId implements BaseEntity {
-    private String groupName;
-    private LocalDateTime createdAt;
-    @ManyToOne
-    private User teacher;
-    @ManyToOne
-    private Room room;
-    private String comment;
+public class PaymentType extends BaseEntityId implements BaseEntity {
+    private String name;
     private Boolean isActive = true;
+    @ManyToOne
+    private EduCenter eduCenter;
 }

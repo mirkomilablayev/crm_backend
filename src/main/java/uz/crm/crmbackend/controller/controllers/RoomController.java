@@ -2,8 +2,7 @@ package uz.crm.crmbackend.controller.controllers;
 
 
 import org.springframework.http.HttpEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uz.crm.crmbackend.controller.AbstractController;
 import uz.crm.crmbackend.dto.room.RoomCreateDto;
 import uz.crm.crmbackend.dto.room.RoomUpdateDto;
@@ -17,23 +16,33 @@ public class RoomController extends AbstractController<RoomService> implements C
         super(service);
     }
 
+    @PostMapping("/createRoom")
     @Override
     public HttpEntity<?> create(RoomCreateDto cd) {
         return service.create(cd);
     }
 
+    @PutMapping("/updateRoom")
     @Override
     public HttpEntity<?> update(RoomUpdateDto cd) {
-        return null;
+        return service.update(cd);
     }
 
+    @GetMapping("/getById/{id}")
     @Override
-    public HttpEntity<?> get(Long id) {
-        return null;
+    public HttpEntity<?> get(@PathVariable  Long id) {
+        return service.get(id);
     }
 
+    @DeleteMapping("/deleteById/{id}")
     @Override
-    public HttpEntity<?> deleteById(Long id) {
-        return null;
+    public HttpEntity<?> deleteById(@PathVariable  Long id) {
+        return deleteById(id);
+    }
+
+
+    @GetMapping("/getAllRooms")
+    public HttpEntity<?> getAllRooms(){
+        return service.getAllRooms();
     }
 }

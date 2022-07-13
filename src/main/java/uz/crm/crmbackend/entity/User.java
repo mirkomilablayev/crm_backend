@@ -27,7 +27,7 @@ public class User extends BaseEntityId implements UserDetails, BaseEntity {
     @ManyToOne
     private File logoFile;
 
-
+    private String relativesPhoneNumber;
 
 
     @Column(nullable = false)

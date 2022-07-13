@@ -11,6 +11,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 import uz.crm.crmbackend.dto.user.LoginDto;
 import uz.crm.crmbackend.dto.user.RegisterDto;
+import uz.crm.crmbackend.dto.user.RegisterStudent;
 import uz.crm.crmbackend.dto.user.ResToken;
 import uz.crm.crmbackend.entity.User;
 import uz.crm.crmbackend.service.auth.AuthService;
@@ -33,6 +34,11 @@ public class AuthController {
     @PostMapping("/registerTeacher")
     public HttpEntity<?> registerT(@RequestBody RegisterDto registerDto){
         return authService.registerT(registerDto);
+    }
+
+    @PostMapping("/registerSturent")
+    public HttpEntity<?> registerS(@RequestBody RegisterStudent registerStudent){
+        return authService.registerS(registerStudent);
     }
 
     @PostMapping("/login")

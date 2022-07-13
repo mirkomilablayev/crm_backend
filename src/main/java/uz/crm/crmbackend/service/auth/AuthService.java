@@ -11,8 +11,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uz.crm.crmbackend.dto.user.RegisterDto;
+import uz.crm.crmbackend.dto.user.RegisterStudent;
 import uz.crm.crmbackend.entity.User;
 import uz.crm.crmbackend.entity.UserRole;
+import uz.crm.crmbackend.repository.repositories.EduCenterRepo;
 import uz.crm.crmbackend.repository.repositories.RoleRepo;
 import uz.crm.crmbackend.repository.repositories.UserRepo;
 import uz.crm.crmbackend.service.BaseService;
@@ -20,8 +22,10 @@ import uz.crm.crmbackend.exceptions.ResourceNotFoundException;
 import uz.crm.crmbackend.exceptions.UserRoleNotFoundException;
 import uz.crm.crmbackend.exceptions.UsernameAlreadyRegisterException;
 import uz.crm.crmbackend.tools.Constant;
+import uz.crm.crmbackend.tools.Util;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -30,6 +34,8 @@ public class AuthService implements UserDetailsService , BaseService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepo userRepo;
     private final RoleRepo roleRepo;
+    private final EduCenterRepo eduCenterRepo;
+    private final Util util;
 
 
     public HttpEntity<?> registerA(RegisterDto cd) {
@@ -70,5 +76,23 @@ public class AuthService implements UserDetailsService , BaseService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return   userRepo.findByUsernameAndIsDeleted(username,false).orElseThrow(() -> new ResourceNotFoundException(""));
+    }
+
+    public HttpEntity<?> registerS(RegisterStudent registerStudent) {
+        if (userRepo.existsByUsernameAndIsDeleted(registerStudent.getUsername(), false)){
+            User user = new User();
+            user.setFullName(registerStudent.getFullName());
+            user.setPassword(passwordEncoder.encode(registerStudent.getPassword()));
+            user.setPhoneNumber(registerStudent.getPersonalPhoneNumber());
+            user.setRelativesPhoneNumber(registerStudent.getRelativesPhoneNumber());
+            user.setUserRoleSet(new HashSet<>(List.of(
+                    roleRepo.findByNameAndIsActive(Constant.TEACHER,true).orElseThrow(ResourceNotFoundException::new)
+            )));
+            user.setEduCenter(eduCenterRepo.findByIdAndIsArchived(util.getEduCenterId(), false).orElseThrow(ResourceNotFoundException::new));
+            user.setIsDeleted(false);
+            userRepo.save(user);
+        }{
+            throw new UsernameAlreadyRegisterException("");
+        }
     }
 }

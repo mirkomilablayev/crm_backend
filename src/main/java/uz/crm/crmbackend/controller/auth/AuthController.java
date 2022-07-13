@@ -11,6 +11,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 import uz.crm.crmbackend.dto.user.LoginDto;
 import uz.crm.crmbackend.dto.user.RegisterDto;
+import uz.crm.crmbackend.dto.user.ResToken;
 import uz.crm.crmbackend.entity.User;
 import uz.crm.crmbackend.service.auth.AuthService;
 import uz.crm.crmbackend.service.jwt.JwtProvider;
@@ -44,7 +45,7 @@ public class AuthController {
             return new ResponseEntity<>("", HttpStatus.BAD_GATEWAY);
         }
         String token = jwtProvider.generateToken(user.getUsername(), user.getUserRoleSet());
-        return ResponseEntity.status(HttpStatus.OK).body(token);
+        return ResponseEntity.status(HttpStatus.OK).body(new ResToken(token));
     }
 
 }

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-// ctrl + c
+
 @Service
 public class PayEduService extends AbstractService<PayEduRepo> implements BaseService, CrudService<PayEduCreateDto, PayEduUpdateDto> {
     private final EduCenterRepo eduCenterRepo;
@@ -45,10 +45,12 @@ public class PayEduService extends AbstractService<PayEduRepo> implements BaseSe
             if (payEdu.getEndTime().isEqual(LocalDateTime.now()) || payEdu.getEndTime().isAfter(LocalDateTime.now())) {
                 payEdu.setIsActiveNow(false);
                 repository.save(payEdu);
-                EduCenter eduCenter = eduCenterRepo.findByIdAndIsArchived(cd.getEduCenterId(), false).orElseThrow(ResourceNotFoundException::new);
+                EduCenter eduCenter = eduCenterRepo
+                        .findByIdAndIsArchived(cd.getEduCenterId(), false)
+                        .orElseThrow(ResourceNotFoundException::new);
                 eduCenter.setCenterStatus(centerStatusRepo.findByName(Constant.status1).orElseThrow(ResourceNotFoundException::new));
                 return savePayEdu(cd);
-            }else{
+            } else {
                 throw new ConflictException("");
             }
         } else {
@@ -57,7 +59,7 @@ public class PayEduService extends AbstractService<PayEduRepo> implements BaseSe
     }
 
     private ResponseEntity<PayEdu> savePayEdu(PayEduCreateDto cd) {
-        if (cd.getEndTime().isEqual(LocalDateTime.now()) || cd.getEndTime().isAfter(LocalDateTime.now())){
+        if (cd.getEndTime().isEqual(LocalDateTime.now()) || cd.getEndTime().isAfter(LocalDateTime.now())) {
             throw new ConflictException("");
         }
         return ResponseEntity.status(HttpStatus.OK).body(repository.save(new PayEdu(eduCenterRepo.findByIdAndIsArchived(cd.getEduCenterId(), false).orElseThrow(ResourceNotFoundException::new), cd.getStartTime(), cd.getEndTime(), cd.getPayAmount(), cd.getComment())));
@@ -107,13 +109,15 @@ public class PayEduService extends AbstractService<PayEduRepo> implements BaseSe
     }
 
     public HttpEntity<?> getPaymentsCount() {
-        double  aDouble = repository.getAllPayAmountSum();
-        PayAmount payAmount = new PayAmount(aDouble);
-        return ResponseEntity.status(HttpStatus.OK).body(payAmount);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new PayAmount(
+                        repository.getAllPayAmountSum()
+                ));
     }
 
     @Scheduled(fixedRate = 60 * 60 * 12 * 1000)
-    public void makeUnActiveEduCenter(){
+    public void makeUnActiveEduCenter() {
         repository.findByIsActiveNow(true).forEach(payEdu -> {
             if (payEdu.getEndTime().isAfter(LocalDateTime.now())) {
                 EduCenter eduCenter = payEdu.getEduCenter();

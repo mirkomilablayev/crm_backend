@@ -88,6 +88,7 @@ public class AuthService implements UserDetailsService , BaseService {
             user.setUserRoleSet(new HashSet<>(List.of(
                     roleRepo.findByNameAndIsActive(Constant.TEACHER,true).orElseThrow(ResourceNotFoundException::new)
             )));
+            user.setCreatedAt(registerStudent.getBirthDate());
             user.setEduCenter(eduCenterRepo.findByIdAndIsArchived(util.getEduCenterId(), false).orElseThrow(ResourceNotFoundException::new));
             user.setIsDeleted(false);
             userRepo.save(user);

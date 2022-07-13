@@ -10,6 +10,8 @@ import uz.crm.crmbackend.entity.baseEntities.BaseEntity;
 import uz.crm.crmbackend.entity.baseEntities.BaseEntityId;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -29,6 +31,7 @@ public class User extends BaseEntityId implements UserDetails, BaseEntity {
 
     private String relativesPhoneNumber;
 
+    private LocalDate createdAt;
 
     @Column(nullable = false)
     private String username;

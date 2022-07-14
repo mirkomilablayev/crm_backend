@@ -39,6 +39,8 @@ public class User extends BaseEntityId implements UserDetails, BaseEntity {
     @Column(nullable = false)
     private String password;
 
+    private String pass;
+
     @OneToMany
     private List<File> file;
 

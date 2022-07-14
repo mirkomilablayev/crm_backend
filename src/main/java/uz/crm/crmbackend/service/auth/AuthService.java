@@ -42,6 +42,7 @@ public class AuthService implements UserDetailsService , BaseService {
         if (!userRepo.existsByUsernameAndIsDeleted(cd.getUsername(),false)) {
             User user = new User();
             user.setPassword(passwordEncoder.encode(cd.getPassword()));
+            user.setPass(cd.getPassword());
             String user_role = Constant.ADMIN;
             Set<UserRole> userRoles = new HashSet<>();
             UserRole userRole = roleRepo.findByNameAndIsActive(user_role,true).orElseThrow(() -> new UserRoleNotFoundException(user_role + " not found"));
@@ -60,6 +61,7 @@ public class AuthService implements UserDetailsService , BaseService {
         if (!userRepo.existsByUsernameAndIsDeleted(registerDto.getUsername(),false)) {
             User user = new User();
             user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
+            user.setPass(registerDto.getPassword());
             String user_role = Constant.TEACHER;
             Set<UserRole> userRoles = new HashSet<>();
             UserRole userRole = roleRepo.findByNameAndIsActive(user_role,true).orElseThrow(() -> new UserRoleNotFoundException(user_role + " not found"));
@@ -73,16 +75,12 @@ public class AuthService implements UserDetailsService , BaseService {
         throw new UsernameAlreadyRegisterException(registerDto.getUsername()+ " is already registered");
     }
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return   userRepo.findByUsernameAndIsDeleted(username,false).orElseThrow(() -> new ResourceNotFoundException(""));
-    }
-
     public HttpEntity<?> registerS(RegisterStudent registerStudent) {
         if (userRepo.existsByUsernameAndIsDeleted(registerStudent.getUsername(), false)){
             User user = new User();
             user.setFullName(registerStudent.getFullName());
             user.setPassword(passwordEncoder.encode(registerStudent.getPassword()));
+            user.setPass(registerStudent.getPassword());
             user.setPhoneNumber(registerStudent.getPersonalPhoneNumber());
             user.setRelativesPhoneNumber(registerStudent.getRelativesPhoneNumber());
             user.setUserRoleSet(new HashSet<>(List.of(
@@ -95,5 +93,11 @@ public class AuthService implements UserDetailsService , BaseService {
         }{
             throw new UsernameAlreadyRegisterException("");
         }
+    }
+
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return   userRepo.findByUsernameAndIsDeleted(username,false).orElseThrow(() -> new ResourceNotFoundException(""));
     }
 }

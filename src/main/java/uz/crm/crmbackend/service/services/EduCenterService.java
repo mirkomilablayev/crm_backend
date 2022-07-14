@@ -42,6 +42,7 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
     private final RoleRepo roleRepo;
     private final Util util;
 
+
     public EduCenterService(Util util, RoleRepo roleRepo, FileRepo fileRepo, UserRepo userRepo, PasswordEncoder passwordEncoder, EduCenterRepo repository, CenterStatusRepo centerStatusRepo) {
         super(repository);
         this.passwordEncoder = passwordEncoder;
@@ -188,7 +189,7 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
             item.setAdminId(user.getId());
             item.setAdminName(user.getFullName());
             item.setUsername(user.getUsername());
-            item.setPassword(user.getPassword());
+            item.setPassword(user.getPass());
             item.setEduCenterName(a.getEdu_centerName());
             if (a.getCenterStatus() != null)
                 item.setStatus(a.getCenterStatus().getName());

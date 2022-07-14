@@ -1,11 +1,18 @@
 package uz.crm.crmbackend.service.jwt;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
+import uz.crm.crmbackend.dto.user.UserRolesForToken;
+import uz.crm.crmbackend.entity.User;
 import uz.crm.crmbackend.entity.UserRole;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Component
@@ -13,12 +20,23 @@ public class JwtProvider {
     private static final long expire = 1000 * 60 * 60 * 12;
     private static final String key = "sasasfddsgfdhfghfgjhgjhgj";
 
-    public String generateToken(String username, Set<UserRole> roles){
+    public String generateToken(String username, User user){
+
+        Claims claims =Jwts.claims().setSubject(username);
+        List<UserRolesForToken> roles = new ArrayList<>();
+        for (UserRole userRole : user.getUserRoleSet()) {
+            roles.add(new UserRolesForToken(userRole.getId(), userRole.getName()));
+        }
+        try {
+            claims.put("UserRoles",new ObjectMapper().writeValueAsString(roles));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
         return Jwts.builder()
-                .setSubject(username)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis()+expire))
-                .claim("roles",roles.toString())
+                .setClaims(claims)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + expire))
                 .signWith(SignatureAlgorithm.HS512,key)
                 .compact();
     }

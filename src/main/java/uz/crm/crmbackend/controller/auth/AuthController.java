@@ -50,7 +50,7 @@ public class AuthController {
         }catch (AuthenticationException e){
             return new ResponseEntity<>("", HttpStatus.BAD_GATEWAY);
         }
-        String token = jwtProvider.generateToken(user.getUsername(), user.getUserRoleSet());
+        String token = jwtProvider.generateToken(user.getUsername(), user);
         return ResponseEntity.status(HttpStatus.OK).body(new ResToken(token));
     }
 

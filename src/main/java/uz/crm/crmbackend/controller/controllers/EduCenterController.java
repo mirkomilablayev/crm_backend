@@ -25,6 +25,7 @@ public class EduCenterController extends AbstractController<EduCenterService> im
 
 
 
+    @CheckRole(Constant.SUPER_ADMIN)
     @PostMapping("/createEduCenter")
     @Override
     public HttpEntity<?> create(EduCenCreateDto cd) {

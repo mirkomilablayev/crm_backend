@@ -40,6 +40,7 @@ public class DataLoader implements CommandLineRunner {
             roleRepo.save(new UserRole(Constant.SUPER_ADMIN));
             roleRepo.save(new UserRole(Constant.ADMIN));
             roleRepo.save(new UserRole(Constant.TEACHER));
+            roleRepo.save(new UserRole(Constant.STUDENT));
 
 
             centerStatusRepo.save(new CenterStatus(Constant.status1));

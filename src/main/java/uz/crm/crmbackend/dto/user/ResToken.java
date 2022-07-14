@@ -8,5 +8,5 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class ResToken {
-    private String token;
+    private String accessToken;
 }

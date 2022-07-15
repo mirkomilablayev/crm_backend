@@ -56,15 +56,17 @@ public class AuthController {
 
         ResToken resToken = new ResToken();
         boolean flag = false;
+        String string = "";
         Set<String> userRolesForTokens = new HashSet<>();
         for (UserRole userRole : user.getUserRoleSet()) {
             if (userRole.getName().equals(Constant.SUPER_ADMIN)) {
                 flag = true;
-                userRolesForTokens.add(userRole.getName());
+                string = userRole.getAuthority();
             }
         }
         resToken.setToken(token);
-        resToken.setUserRoleSet(userRolesForTokens);
+
+        resToken.setUserRoleSet(string);
         resToken.setUserName(user.getFullName());
         resToken.setUserId(user.getId());
         if (flag) {

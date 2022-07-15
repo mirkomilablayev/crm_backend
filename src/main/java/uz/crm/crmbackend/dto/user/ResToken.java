@@ -17,5 +17,5 @@ public class ResToken {
     private String eduCenterName;
     private Long eduCenterId;
     private Long imgId;
-    private Set<String> userRoleSet;
+    private String userRoleSet;
 }

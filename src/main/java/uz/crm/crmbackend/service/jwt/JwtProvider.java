@@ -20,41 +20,17 @@ import java.util.Set;
 @Component
 public class JwtProvider {
     private static final long expire = 1000 * 60 * 60 * 12;
-    private static final String key = "sasasfddsgfdhfghfgjhgjhgj";
+    private static final String key = "AqishUsBAsusbaJs)a9s!s_-";
 
     public String generateToken(String username, User user) {
 
         Claims claims = Jwts.claims().setSubject(username);
         List<UserRolesForToken> roles = new ArrayList<>();
-        boolean flag = true;
         for (UserRole userRole : user.getUserRoleSet()) {
             roles.add(new UserRolesForToken(userRole.getId(), userRole.getName()));
-            if (userRole.getName().equals(Constant.SUPER_ADMIN)) {
-                flag = false;
-            }
         }
         try {
-            if (flag) {
-                TokenDto tokenDto = new TokenDto();
-                tokenDto.setRoles(roles);
-                tokenDto.setCurrentUserName(user.getFullName());
-                tokenDto.setCurrentUserId(user.getId());
-                tokenDto.setEduCenterId(user.getEduCenter().getId());
-                tokenDto.setEduCenterName(user.getEduCenter().getEdu_centerName());
-                if (user.getEduCenter().getLogoFile() != null) {
-                    tokenDto.setImgId(user.getEduCenter().getLogoFile().getId());
-                }
-                claims.put("UserRoles", new ObjectMapper().writeValueAsString(tokenDto));
-            } else {
-                TokenDto tokenDto = new TokenDto();
-                tokenDto.setRoles(roles);
-                tokenDto.setCurrentUserName(user.getFullName());
-                tokenDto.setCurrentUserId(user.getId());
-                if (user.getEduCenter() != null && user.getEduCenter().getLogoFile() != null) {
-                    tokenDto.setImgId(user.getEduCenter().getLogoFile().getId());
-                }
-                claims.put("UserRoles", new ObjectMapper().writeValueAsString(tokenDto));
-            }
+                claims.put("userRole", new ObjectMapper().writeValueAsString(roles));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

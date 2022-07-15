@@ -28,4 +28,6 @@ public class UserController {
     public HttpEntity<?> updateSomeUserData(@RequestBody UpdateProfileDataDto updateProfileDataDto){
         return userService.userUpdate(updateProfileDataDto);
     }
+
+
 }

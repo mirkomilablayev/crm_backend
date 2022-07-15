@@ -9,13 +9,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
-import uz.crm.crmbackend.dto.user.LoginDto;
-import uz.crm.crmbackend.dto.user.RegisterDto;
-import uz.crm.crmbackend.dto.user.RegisterStudent;
-import uz.crm.crmbackend.dto.user.ResToken;
+import uz.crm.crmbackend.dto.user.*;
 import uz.crm.crmbackend.entity.User;
+import uz.crm.crmbackend.entity.UserRole;
 import uz.crm.crmbackend.service.auth.AuthService;
 import uz.crm.crmbackend.service.jwt.JwtProvider;
+import uz.crm.crmbackend.tools.Constant;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -27,31 +29,55 @@ public class AuthController {
     private final JwtProvider jwtProvider;
 
     @PostMapping("/registerAdmin")
-    public HttpEntity<?> registerA(@RequestBody RegisterDto registerDto){
+    public HttpEntity<?> registerA(@RequestBody RegisterDto registerDto) {
         return authService.registerA(registerDto);
     }
 
     @PostMapping("/registerTeacher")
-    public HttpEntity<?> registerT(@RequestBody RegisterDto registerDto){
+    public HttpEntity<?> registerT(@RequestBody RegisterDto registerDto) {
         return authService.registerT(registerDto);
     }
 
     @PostMapping("/registerSturent")
-    public HttpEntity<?> registerS(@RequestBody RegisterStudent registerStudent){
+    public HttpEntity<?> registerS(@RequestBody RegisterStudent registerStudent) {
         return authService.registerS(registerStudent);
     }
 
     @PostMapping("/login")
-    public HttpEntity<?> login(@RequestBody LoginDto loginDto){
+    public HttpEntity<?> login(@RequestBody LoginDto loginDto) {
         User user = null;
-        try{
+        try {
             Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
-            user =(User) authenticate.getPrincipal();
-        }catch (AuthenticationException e){
+            user = (User) authenticate.getPrincipal();
+        } catch (AuthenticationException e) {
             return new ResponseEntity<>("", HttpStatus.BAD_GATEWAY);
         }
-        String token = jwtProvider.generateToken(user.getUsername(), user);
-        return ResponseEntity.status(HttpStatus.OK).body(new ResToken(token));
+        String token = jwtProvider.generateToken(user.getUsername());
+
+        ResToken resToken = new ResToken();
+        boolean flag = false;
+        Set<String> userRolesForTokens = new HashSet<>();
+        for (UserRole userRole : user.getUserRoleSet()) {
+            if (userRole.getName().equals(Constant.SUPER_ADMIN)) {
+                flag = true;
+                userRolesForTokens.add(userRole.getName());
+            }
+        }
+        resToken.setToken(token);
+        resToken.setUserRoleSet(userRolesForTokens);
+        resToken.setUserName(user.getFullName());
+        resToken.setUserId(user.getId());
+        if (flag) {
+            if (user.getLogoFile() != null) {
+                resToken.setImgId(user.getLogoFile().getId());
+            }
+        } else {
+            resToken.setEduCenterId(user.getEduCenter().getId());
+            resToken.setEduCenterName(user.getEduCenter().getEdu_centerName());
+        }
+
+
+        return ResponseEntity.status(HttpStatus.OK).body(resToken);
     }
 
 }

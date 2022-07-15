@@ -22,15 +22,11 @@ public class JwtProvider {
     private static final long expire = 1000 * 60 * 60 * 12;
     private static final String key = "AqishUsBAsusbaJs)a9s!s_-";
 
-    public String generateToken(String username, User user) {
+    public String generateToken(String username) {
 
         Claims claims = Jwts.claims().setSubject(username);
-        List<UserRolesForToken> roles = new ArrayList<>();
-        for (UserRole userRole : user.getUserRoleSet()) {
-            roles.add(new UserRolesForToken(userRole.getId(), userRole.getName()));
-        }
         try {
-                claims.put("userRole", new ObjectMapper().writeValueAsString(roles));
+                claims.put("userRole", new ObjectMapper().writeValueAsString("Success"));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

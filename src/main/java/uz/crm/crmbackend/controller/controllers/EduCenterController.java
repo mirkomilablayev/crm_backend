@@ -3,13 +3,11 @@ package uz.crm.crmbackend.controller.controllers;
 import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import uz.crm.crmbackend.config.anotation.CheckRole;
 import uz.crm.crmbackend.controller.AbstractController;
 import uz.crm.crmbackend.controller.CrudController;
 import uz.crm.crmbackend.dto.eduCenter.EduCenCreateDto;
 import uz.crm.crmbackend.dto.eduCenter.EduCenUpdateDto;
 import uz.crm.crmbackend.service.services.EduCenterService;
-import uz.crm.crmbackend.tools.Constant;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -25,7 +23,7 @@ public class EduCenterController extends AbstractController<EduCenterService> im
 
 
 
-    @CheckRole(Constant.SUPER_ADMIN)
+
     @PostMapping("/createEduCenter")
     @Override
     public HttpEntity<?> create(EduCenCreateDto cd) {

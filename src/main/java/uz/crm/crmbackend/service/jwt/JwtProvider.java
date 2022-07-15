@@ -6,9 +6,11 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Component;
+import uz.crm.crmbackend.dto.user.TokenDto;
 import uz.crm.crmbackend.dto.user.UserRolesForToken;
 import uz.crm.crmbackend.entity.User;
 import uz.crm.crmbackend.entity.UserRole;
+import uz.crm.crmbackend.tools.Constant;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,15 +22,39 @@ public class JwtProvider {
     private static final long expire = 1000 * 60 * 60 * 12;
     private static final String key = "sasasfddsgfdhfghfgjhgjhgj";
 
-    public String generateToken(String username, User user){
+    public String generateToken(String username, User user) {
 
-        Claims claims =Jwts.claims().setSubject(username);
+        Claims claims = Jwts.claims().setSubject(username);
         List<UserRolesForToken> roles = new ArrayList<>();
+        boolean flag = true;
         for (UserRole userRole : user.getUserRoleSet()) {
             roles.add(new UserRolesForToken(userRole.getId(), userRole.getName()));
+            if (userRole.getName().equals(Constant.SUPER_ADMIN)) {
+                flag = false;
+            }
         }
         try {
-            claims.put("UserRoles",new ObjectMapper().writeValueAsString(roles));
+            if (flag) {
+                TokenDto tokenDto = new TokenDto();
+                tokenDto.setRoles(roles);
+                tokenDto.setCurrentUserName(user.getFullName());
+                tokenDto.setCurrentUserId(user.getId());
+                tokenDto.setEduCenterId(user.getEduCenter().getId());
+                tokenDto.setEduCenterName(user.getEduCenter().getEdu_centerName());
+                if (user.getEduCenter().getLogoFile() != null) {
+                    tokenDto.setImgId(user.getEduCenter().getLogoFile().getId());
+                }
+                claims.put("UserRoles", new ObjectMapper().writeValueAsString(tokenDto));
+            } else {
+                TokenDto tokenDto = new TokenDto();
+                tokenDto.setRoles(roles);
+                tokenDto.setCurrentUserName(user.getFullName());
+                tokenDto.setCurrentUserId(user.getId());
+                if (user.getEduCenter() != null && user.getEduCenter().getLogoFile() != null) {
+                    tokenDto.setImgId(user.getEduCenter().getLogoFile().getId());
+                }
+                claims.put("UserRoles", new ObjectMapper().writeValueAsString(tokenDto));
+            }
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -37,21 +63,21 @@ public class JwtProvider {
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expire))
-                .signWith(SignatureAlgorithm.HS512,key)
+                .signWith(SignatureAlgorithm.HS512, key)
                 .compact();
     }
 
-    public String getUsername(String token){
-       try{
-           return Jwts
-                   .parser()
-                   .setSigningKey(key)
-                   .parseClaimsJws(token)
-                   .getBody()
-                   .getSubject();
-       }catch (Exception e){
-           return null;
-       }
+    public String getUsername(String token) {
+        try {
+            return Jwts
+                    .parser()
+                    .setSigningKey(key)
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 

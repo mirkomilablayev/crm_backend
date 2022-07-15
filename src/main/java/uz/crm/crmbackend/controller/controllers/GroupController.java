@@ -1,7 +1,6 @@
 package uz.crm.crmbackend.controller.controllers;
 
 
-import lombok.*;
 import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

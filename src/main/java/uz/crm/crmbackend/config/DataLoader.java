@@ -61,33 +61,33 @@ public class DataLoader implements CommandLineRunner {
 
 
             User admin1 = new User();
-            admin.setFullName("Anonymous User");
-            admin.setIsDeleted(false);
-            admin.setUserRoleSet(new HashSet<>(List.of(roleRepo.findByNameAndIsActive(Constant.ADMIN,true)
+            admin1.setFullName("Anonymous User");
+            admin1.setIsDeleted(false);
+            admin1.setUserRoleSet(new HashSet<>(List.of(roleRepo.findByNameAndIsActive(Constant.ADMIN,true)
                     .orElseThrow(() ->
                             new UserRoleNotFoundException(Constant.ADMIN+" role not found")))));
-            admin.setUsername("2");
-            admin.setPassword(passwordEncoder.encode("2"));
+            admin1.setUsername("2");
+            admin1.setPassword(passwordEncoder.encode("2"));
             userRepo.save(admin1);
 
             User admin2 = new User();
-            admin.setFullName("Anonymous User");
-            admin.setIsDeleted(false);
-            admin.setUserRoleSet(new HashSet<>(List.of(roleRepo.findByNameAndIsActive(Constant.TEACHER,true)
+            admin2.setFullName("Anonymous User");
+            admin2.setIsDeleted(false);
+            admin2.setUserRoleSet(new HashSet<>(List.of(roleRepo.findByNameAndIsActive(Constant.TEACHER,true)
                     .orElseThrow(() ->
                             new UserRoleNotFoundException(Constant.TEACHER+" role not found")))));
-            admin.setUsername("3");
-            admin.setPassword(passwordEncoder.encode("3"));
+            admin2.setUsername("3");
+            admin2.setPassword(passwordEncoder.encode("3"));
             userRepo.save(admin2);
 
             User admin3 = new User();
-            admin.setFullName("Anonymous User");
-            admin.setIsDeleted(false);
-            admin.setUserRoleSet(new HashSet<>(List.of(roleRepo.findByNameAndIsActive(Constant.STUDENT,true)
+            admin3.setFullName("Anonymous User");
+            admin3.setIsDeleted(false);
+            admin3.setUserRoleSet(new HashSet<>(List.of(roleRepo.findByNameAndIsActive(Constant.STUDENT,true)
                     .orElseThrow(() ->
                             new UserRoleNotFoundException(Constant.STUDENT+" role not found")))));
-            admin.setUsername("4");
-            admin.setPassword(passwordEncoder.encode("4"));
+            admin3.setUsername("4");
+            admin3.setPassword(passwordEncoder.encode("4"));
             userRepo.save(admin3);
         }
     }

@@ -9,6 +9,7 @@ import uz.crm.crmbackend.dto.subject.SubjectUpdateDto;
 import uz.crm.crmbackend.service.services.SubjectService;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/subject")
 public class SubjectController extends AbstractController<SubjectService> implements CrudController<SubjectCreateDto, SubjectUpdateDto> {
 

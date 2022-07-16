@@ -12,6 +12,7 @@ import uz.crm.crmbackend.service.services.PaymentTypeService;
 import javax.ws.rs.Path;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/paymentType")
 public class PaymentTypeController extends AbstractController<PaymentTypeService> implements CrudController<PaymentTypeCreateDto, PaymentTypeUpdateDto> {
 

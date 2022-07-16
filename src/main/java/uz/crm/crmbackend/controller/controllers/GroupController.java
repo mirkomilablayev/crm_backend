@@ -2,6 +2,7 @@ package uz.crm.crmbackend.controller.controllers;
 
 
 import org.springframework.http.HttpEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uz.crm.crmbackend.controller.AbstractController;
@@ -11,6 +12,7 @@ import uz.crm.crmbackend.dto.group.GroupUpdateDto;
 import uz.crm.crmbackend.service.services.GroupService;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/group")
 public class GroupController extends AbstractController<GroupService> implements CrudController<GroupCreateDto, GroupUpdateDto> {
 

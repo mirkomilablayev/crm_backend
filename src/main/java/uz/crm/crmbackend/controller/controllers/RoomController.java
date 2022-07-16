@@ -10,6 +10,7 @@ import uz.crm.crmbackend.service.CrudService;
 import uz.crm.crmbackend.service.services.RoomService;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/room")
 public class RoomController extends AbstractController<RoomService> implements CrudService<RoomCreateDto, RoomUpdateDto> {
     public RoomController(RoomService service) {

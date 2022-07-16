@@ -10,6 +10,7 @@ import uz.crm.crmbackend.service.services.UserService;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/user")
 public class UserController {
     private final UserService userService;

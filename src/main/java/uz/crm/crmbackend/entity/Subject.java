@@ -9,8 +9,6 @@ import javax.persistence.Entity;
 @Setter
 @Getter
 @ToString
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 public class Subject extends BaseEntityId implements BaseEntity {
 }

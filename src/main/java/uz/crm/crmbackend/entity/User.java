@@ -41,8 +41,7 @@ public class User extends BaseEntityId implements UserDetails, BaseEntity {
 
     private String pass;
 
-    @OneToMany
-    private List<File> file;
+
 
     private Boolean isDeleted = false;
     @ManyToMany

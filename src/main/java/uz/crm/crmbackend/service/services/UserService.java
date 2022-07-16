@@ -91,4 +91,13 @@ public class UserService {
         userRepo.save(currentUser);
         return ResponseEntity.status(HttpStatus.OK).body("Succcess");
     }
+
+    public HttpEntity<?> getEduCenterStudent() {
+
+        for (User user : userRepo.findAllByEduCenter_IdAndIsDeleted(util.getEduCenterId(), false)) {
+
+        }
+
+        return null;
+    }
 }

@@ -15,4 +15,5 @@ public interface UserRepo extends JpaRepository<User, Long>, BaseRepository {
     Optional<User> findByIdAndIsDeleted(Long id, Boolean isDeleted);
     Boolean existsByPhoneNumberAndIsDeleted(String phoneNumber, Boolean isDeleted);
     List<User> findAllByEduCenter_IdAndIsDeleted(Long eduCenter_id, Boolean isDeleted);
+
 }

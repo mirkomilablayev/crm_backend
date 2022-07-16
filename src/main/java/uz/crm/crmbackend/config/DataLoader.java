@@ -65,7 +65,7 @@ public class DataLoader implements CommandLineRunner {
             admin.setIsDeleted(false);
             admin.setUserRoleSet(new HashSet<>(List.of(roleRepo.findByNameAndIsActive(Constant.ADMIN,true)
                     .orElseThrow(() ->
-                            new UserRoleNotFoundException(Constant.SUPER_ADMIN+" role not found")))));
+                            new UserRoleNotFoundException(Constant.ADMIN+" role not found")))));
             admin.setUsername("2");
             admin.setPassword(passwordEncoder.encode("2"));
             userRepo.save(admin1);
@@ -75,7 +75,7 @@ public class DataLoader implements CommandLineRunner {
             admin.setIsDeleted(false);
             admin.setUserRoleSet(new HashSet<>(List.of(roleRepo.findByNameAndIsActive(Constant.TEACHER,true)
                     .orElseThrow(() ->
-                            new UserRoleNotFoundException(Constant.SUPER_ADMIN+" role not found")))));
+                            new UserRoleNotFoundException(Constant.TEACHER+" role not found")))));
             admin.setUsername("3");
             admin.setPassword(passwordEncoder.encode("3"));
             userRepo.save(admin2);
@@ -83,9 +83,9 @@ public class DataLoader implements CommandLineRunner {
             User admin3 = new User();
             admin.setFullName("Anonymous User");
             admin.setIsDeleted(false);
-            admin.setUserRoleSet(new HashSet<>(List.of(roleRepo.findByNameAndIsActive(Constant.TEACHER,true)
+            admin.setUserRoleSet(new HashSet<>(List.of(roleRepo.findByNameAndIsActive(Constant.STUDENT,true)
                     .orElseThrow(() ->
-                            new UserRoleNotFoundException(Constant.SUPER_ADMIN+" role not found")))));
+                            new UserRoleNotFoundException(Constant.STUDENT+" role not found")))));
             admin.setUsername("4");
             admin.setPassword(passwordEncoder.encode("4"));
             userRepo.save(admin3);

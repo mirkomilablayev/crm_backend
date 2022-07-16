@@ -29,5 +29,10 @@ public class UserController {
         return userService.userUpdate(updateProfileDataDto);
     }
 
+    @GetMapping
+    public HttpEntity<?> getEduCenterStudents(){
+        return userService.getEduCenterStudent();
+    }
+
 
 }

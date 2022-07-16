@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Setter
 @Getter
 @AllArgsConstructor
@@ -15,5 +17,6 @@ public class RegisterDto {
     private String phoneNumber;
     private String password;
     private String username;
+    private List<Long> subjectsId;
 }
 

@@ -62,7 +62,9 @@ public class AuthController {
             if (userRole.getName().equals(Constant.SUPER_ADMIN)) {
                 flag = true;
                 string = userRole.getAuthority();
+                break;
             }
+            string = userRole.getAuthority();
         }
         resToken.setToken(token);
 

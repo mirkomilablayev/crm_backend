@@ -41,7 +41,8 @@ public class User extends BaseEntityId implements UserDetails, BaseEntity {
 
     private String pass;
 
-
+    @ManyToMany
+    private  List<Subject> subjects;
 
     private Boolean isDeleted = false;
     @ManyToMany

@@ -48,8 +48,8 @@ public class SubjectController extends AbstractController<SubjectService> implem
     }
 
 
-    @GetMapping("/changeStatus")
-    public HttpEntity<?> changeStatus(@RequestParam Long id){
+    @PostMapping("/changeStatus")
+    public HttpEntity<?> changeStatus(@RequestBody Long id){
         return service.changeStatus(id);
     }
 }

@@ -87,13 +87,11 @@ public class SubjectService extends AbstractService<SubjectRepo> implements Crud
         List<SubjectShowDto> res = new ArrayList<>();
         Long eduCenterId = util.getEduCenterId();
         repository.findAllByEduCenter_IdAndIsActive(eduCenterId, true).forEach(subject -> {
-            if (subject.getStatus().getName().equals(Constant.subStatus1)) {
                 SubjectShowDto subjectShowDto = new SubjectShowDto();
                 subjectShowDto.setId(subject.getId());
                 subjectShowDto.setName(subject.getName());
                 subjectShowDto.setComment(subject.getComment());
                 res.add(subjectShowDto);
-            }
         });
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }

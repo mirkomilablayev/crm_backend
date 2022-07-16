@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Entity
+@Entity(name = "groups")
 public class Group extends BaseEntityId implements BaseEntity {
     private String groupName;
     private LocalDateTime createdAt;

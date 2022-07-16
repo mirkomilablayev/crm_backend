@@ -1,8 +1,7 @@
 package uz.crm.crmbackend.controller.controllers;
 
 import org.springframework.http.HttpEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uz.crm.crmbackend.controller.AbstractController;
 import uz.crm.crmbackend.controller.CrudController;
 import uz.crm.crmbackend.dto.subject.SubjectCreateDto;
@@ -18,23 +17,32 @@ public class SubjectController extends AbstractController<SubjectService> implem
         super(service);
     }
 
+    @PostMapping("/creareSubject")
     @Override
     public HttpEntity<?> create(SubjectCreateDto cd) {
-        return null;
+        return service.create(cd);
     }
 
+    @PutMapping("/updateSubject")
     @Override
     public HttpEntity<?> update(SubjectUpdateDto cd) {
-        return null;
+        return service.update(cd);
     }
 
+    @GetMapping("/getSubject/{id}")
     @Override
-    public HttpEntity<?> get(Long id) {
-        return null;
+    public HttpEntity<?> get(@PathVariable Long id) {
+        return service.get(id);
     }
 
+    @DeleteMapping("/deleteSubject/{id}")
     @Override
-    public HttpEntity<?> deleteById(Long id) {
-        return null;
+    public HttpEntity<?> deleteById(@PathVariable Long id) {
+        return service.deleteById(id);
+    }
+
+    @GetMapping("/getAll")
+    public HttpEntity<?> getAll(){
+        return service.getAll();
     }
 }

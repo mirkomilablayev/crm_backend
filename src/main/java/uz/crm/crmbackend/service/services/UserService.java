@@ -8,10 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import uz.crm.crmbackend.dto.user.StudentShowDto;
 import uz.crm.crmbackend.dto.user.UpdateProfileDataDto;
 import uz.crm.crmbackend.dto.user.UserProfileDataDto;
 import uz.crm.crmbackend.entity.File;
 import uz.crm.crmbackend.entity.User;
+import uz.crm.crmbackend.entity.UserRole;
 import uz.crm.crmbackend.repository.repositories.FileRepo;
 import uz.crm.crmbackend.repository.repositories.UserRepo;
 import uz.crm.crmbackend.tools.Constant;
@@ -21,7 +23,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -92,10 +96,33 @@ public class UserService {
         return ResponseEntity.status(HttpStatus.OK).body("Succcess");
     }
 
+    /**
+     * private String fullName;
+     * private String phoneNumber;
+     * private Long eduCenterId;
+     * private Long logoFileId;
+     * private String relativesPhoneNumber;
+     * private LocalDate createdAt;
+     * private String username;
+     * private String pass;
+     *
+     * @return
+     */
+
     public HttpEntity<?> getEduCenterStudent() {
-
+        List<StudentShowDto> res = new ArrayList<>();
         for (User user : userRepo.findAllByEduCenter_IdAndIsDeleted(util.getEduCenterId(), false)) {
+            boolean flag = false;
+            for (UserRole userRole : user.getUserRoleSet()) {
+                if (userRole.getName().equals(Constant.STUDENT)){
+                    flag = true;
+                    break;
+                }
+            }
 
+            if (flag){
+                StudentShowDto a = new StudentShowDto();
+            }
         }
 
         return null;

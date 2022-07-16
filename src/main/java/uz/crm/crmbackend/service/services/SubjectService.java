@@ -90,6 +90,7 @@ public class SubjectService extends AbstractService<SubjectRepo> implements Crud
                 SubjectShowDto subjectShowDto = new SubjectShowDto();
                 subjectShowDto.setId(subject.getId());
                 subjectShowDto.setName(subject.getName());
+                subjectShowDto.setStatus(subject.getStatus().getName());
                 subjectShowDto.setComment(subject.getComment());
                 res.add(subjectShowDto);
         });

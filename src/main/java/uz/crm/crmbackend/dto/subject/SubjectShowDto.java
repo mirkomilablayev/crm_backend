@@ -11,4 +11,5 @@ public class SubjectShowDto {
     private Long id;
     private String name;
     private String comment;
+    private String status;
 }

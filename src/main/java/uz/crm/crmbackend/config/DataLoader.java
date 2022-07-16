@@ -7,10 +7,12 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import uz.crm.crmbackend.entity.CenterStatus;
+import uz.crm.crmbackend.entity.SubjectStatus;
 import uz.crm.crmbackend.entity.User;
 import uz.crm.crmbackend.entity.UserRole;
 import uz.crm.crmbackend.repository.repositories.CenterStatusRepo;
 import uz.crm.crmbackend.repository.repositories.RoleRepo;
+import uz.crm.crmbackend.repository.repositories.SubjectStatusRepo;
 import uz.crm.crmbackend.repository.repositories.UserRepo;
 import uz.crm.crmbackend.tools.Constant;
 import uz.crm.crmbackend.exceptions.UserRoleNotFoundException;
@@ -27,6 +29,7 @@ public class DataLoader implements CommandLineRunner {
     private final RoleRepo roleRepo;
     private final PasswordEncoder passwordEncoder;
     private final CenterStatusRepo centerStatusRepo;
+    private final SubjectStatusRepo subjectStatusRepo;
 
 
 
@@ -58,6 +61,9 @@ public class DataLoader implements CommandLineRunner {
             admin.setUsername("1");
             admin.setPassword(passwordEncoder.encode("1"));
             userRepo.save(admin);
+
+            subjectStatusRepo.save(new SubjectStatus(Constant.subStatus1));
+            subjectStatusRepo.save(new SubjectStatus(Constant.subStatus2));
         }
     }
 }

@@ -16,5 +16,7 @@ public class Subject extends BaseEntityId implements BaseEntity {
     private String comment;
     @ManyToOne
     private EduCenter eduCenter;
+    @ManyToOne
+    private SubjectStatus status;
     private Boolean isActive = true;
 }

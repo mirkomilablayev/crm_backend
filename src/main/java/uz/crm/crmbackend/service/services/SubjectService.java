@@ -11,9 +11,11 @@ import uz.crm.crmbackend.dto.subject.SubjectUpdateDto;
 import uz.crm.crmbackend.entity.Subject;
 import uz.crm.crmbackend.exceptions.ResourceNotFoundException;
 import uz.crm.crmbackend.repository.repositories.SubjectRepo;
+import uz.crm.crmbackend.repository.repositories.SubjectStatusRepo;
 import uz.crm.crmbackend.service.AbstractService;
 import uz.crm.crmbackend.service.BaseService;
 import uz.crm.crmbackend.service.CrudService;
+import uz.crm.crmbackend.tools.Constant;
 import uz.crm.crmbackend.tools.Util;
 
 import java.util.ArrayList;
@@ -23,10 +25,12 @@ import java.util.Optional;
 @Service
 public class SubjectService extends AbstractService<SubjectRepo> implements CrudService<SubjectCreateDto, SubjectUpdateDto>, BaseService {
     private final Util util;
+    private final SubjectStatusRepo subjectStatusRepo;
 
-    public SubjectService(SubjectRepo repository, Util util) {
+    public SubjectService(SubjectRepo repository, Util util, SubjectStatusRepo subjectStatusRepo) {
         super(repository);
         this.util = util;
+        this.subjectStatusRepo = subjectStatusRepo;
     }
 
     @Override
@@ -37,6 +41,7 @@ public class SubjectService extends AbstractService<SubjectRepo> implements Crud
             subject.setComment(cd.getComment());
             subject.setName(cd.getSubjectName());
             subject.setIsActive(true);
+            subject.setStatus(subjectStatusRepo.findByName(Constant.subStatus1).orElseThrow(ResourceNotFoundException::new));
             subject.setEduCenter(util.getCurrentUser().getEduCenter());
             Subject save = repository.save(subject);
             return ResponseEntity.status(HttpStatus.OK).body(save);
@@ -78,16 +83,46 @@ public class SubjectService extends AbstractService<SubjectRepo> implements Crud
         return ResponseEntity.status(HttpStatus.OK).body("Mufoffaqqiyatli o'chirildi");
     }
 
-    public HttpEntity<?> getAll() {
+    public HttpEntity<?> getAllActive() {
         List<SubjectShowDto> res = new ArrayList<>();
         Long eduCenterId = util.getEduCenterId();
         repository.findAllByEduCenter_IdAndIsActive(eduCenterId, true).forEach(subject -> {
-            SubjectShowDto subjectShowDto = new SubjectShowDto();
-            subjectShowDto.setId(subject.getId());
-            subjectShowDto.setName(subject.getName());
-            subjectShowDto.setComment(subject.getComment());
-            res.add(subjectShowDto);
+            if (subject.getStatus().getName().equals(Constant.subStatus1)) {
+                SubjectShowDto subjectShowDto = new SubjectShowDto();
+                subjectShowDto.setId(subject.getId());
+                subjectShowDto.setName(subject.getName());
+                subjectShowDto.setComment(subject.getComment());
+                res.add(subjectShowDto);
+            }
         });
         return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
+
+    public HttpEntity<?> getAllNoActive() {
+        List<SubjectShowDto> res = new ArrayList<>();
+        Long eduCenterId = util.getEduCenterId();
+        repository.findAllByEduCenter_IdAndIsActive(eduCenterId, true).forEach(subject -> {
+            if (subject.getStatus().getName().equals(Constant.subStatus2)) {
+                SubjectShowDto subjectShowDto = new SubjectShowDto();
+                subjectShowDto.setId(subject.getId());
+                subjectShowDto.setName(subject.getName());
+                subjectShowDto.setComment(subject.getComment());
+                res.add(subjectShowDto);
+            }
+        });
+        return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
+
+    public HttpEntity<?> changeStatus(Long id) {
+        Subject subject = repository.findByIdAndIsActive(id, true).orElseThrow(ResourceNotFoundException::new);
+        if (subject.getStatus().getName().equals(Constant.subStatus1)){
+            subject.setStatus(subjectStatusRepo.findByName(Constant.subStatus2).orElseThrow(ResourceNotFoundException::new));
+            Subject save = repository.save(subject);
+            return ResponseEntity.status(HttpStatus.OK).body(save);
+        }else{
+            subject.setStatus(subjectStatusRepo.findByName(Constant.subStatus1).orElseThrow(ResourceNotFoundException::new));
+            Subject save = repository.save(subject);
+            return ResponseEntity.status(HttpStatus.OK).body(save);
+        }
     }
 }

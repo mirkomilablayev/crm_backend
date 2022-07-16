@@ -12,5 +12,6 @@ public interface Constant {
 
     String filePaths = "D:\\rasmlar";
 
-
+    String subStatus1 = "active";
+    String subStatus2 = "noActive";
 }

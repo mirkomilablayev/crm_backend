@@ -42,8 +42,18 @@ public class SubjectController extends AbstractController<SubjectService> implem
         return service.deleteById(id);
     }
 
-    @GetMapping("/getAll")
-    public HttpEntity<?> getAll(){
-        return service.getAll();
+    @GetMapping("/getAllActive")
+    public HttpEntity<?> getAllActive(){
+        return service.getAllActive();
+    }
+
+    @GetMapping("/getAllNoActive")
+    public HttpEntity<?> getAllNoActive(){
+        return service.getAllNoActive();
+    }
+
+    @GetMapping("/changeStatus")
+    public HttpEntity<?> changeStatus(@RequestParam Long id){
+        return service.changeStatus(id);
     }
 }

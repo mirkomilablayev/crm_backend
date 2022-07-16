@@ -17,7 +17,7 @@ public class SubjectController extends AbstractController<SubjectService> implem
         super(service);
     }
 
-    @PostMapping("/creareSubject")
+    @PostMapping("/createSubject")
     @Override
     public HttpEntity<?> create(SubjectCreateDto cd) {
         return service.create(cd);

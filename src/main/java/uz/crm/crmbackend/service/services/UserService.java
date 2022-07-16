@@ -8,9 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import uz.crm.crmbackend.dto.user.UserShowDto;
 import uz.crm.crmbackend.dto.user.UpdateProfileDataDto;
 import uz.crm.crmbackend.dto.user.UserProfileDataDto;
+import uz.crm.crmbackend.dto.user.UserShowDto;
 import uz.crm.crmbackend.entity.File;
 import uz.crm.crmbackend.entity.User;
 import uz.crm.crmbackend.entity.UserRole;
@@ -93,7 +93,7 @@ public class UserService {
             currentUser.setFullName(updateDto.getFullName());
         }
         userRepo.save(currentUser);
-        return ResponseEntity.status(HttpStatus.OK).body("Succcess");
+        return ResponseEntity.status(HttpStatus.OK).body("Success");
     }
 
 
@@ -109,14 +109,7 @@ public class UserService {
             }
 
             if (flag){
-                UserShowDto a = new UserShowDto();
-                a.setFullName(user.getFullName());
-                a.setPhoneNumber(user.getPhoneNumber());
-                a.setRelativesPhoneNumber(user.getRelativesPhoneNumber());
-                a.setEduCenterId(user.getEduCenter().getId());
-                a.setLogoFileId(user.getLogoFile().getId());
-                a.setCreatedAt(user.getCreatedAt());
-                res.add(a);
+                makeUserShowSto(user, res);
             }
         }
         return ResponseEntity.ok(res);
@@ -132,18 +125,21 @@ public class UserService {
                     break;
                 }
             }
-
             if (flag){
-                UserShowDto a = new UserShowDto();
-                a.setFullName(user.getFullName());
-                a.setPhoneNumber(user.getPhoneNumber());
-                a.setRelativesPhoneNumber(user.getRelativesPhoneNumber());
-                a.setEduCenterId(user.getEduCenter().getId());
-                a.setLogoFileId(user.getLogoFile().getId());
-                a.setCreatedAt(user.getCreatedAt());
-                res.add(a);
+                makeUserShowSto(user, res);
             }
         }
         return ResponseEntity.ok(res);
+    }
+
+    private void makeUserShowSto(User user, List<UserShowDto> res) {
+        UserShowDto a = new UserShowDto();
+        a.setFullName(user.getFullName());
+        a.setPhoneNumber(user.getPhoneNumber());
+        a.setRelativesPhoneNumber(user.getRelativesPhoneNumber());
+        a.setEduCenterId(user.getEduCenter().getId());
+        a.setLogoFileId(user.getLogoFile().getId());
+        a.setCreatedAt(user.getCreatedAt());
+        res.add(a);
     }
 }

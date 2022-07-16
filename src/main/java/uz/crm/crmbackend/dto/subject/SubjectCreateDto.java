@@ -10,7 +10,6 @@ import uz.crm.crmbackend.dto.Dto;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SubjectCreateDto implements Dto {
-    private Long id;
     private String subjectName;
     private String comment;
 }

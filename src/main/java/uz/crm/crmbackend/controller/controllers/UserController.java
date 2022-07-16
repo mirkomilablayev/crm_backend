@@ -29,9 +29,15 @@ public class UserController {
         return userService.userUpdate(updateProfileDataDto);
     }
 
-    @GetMapping
+    @GetMapping("/getAllStudents")
     public HttpEntity<?> getEduCenterStudents(){
         return userService.getEduCenterStudent();
+    }
+
+
+    @GetMapping("/getAllTeacher")
+    public HttpEntity<?> getAllTeacher(){
+        return userService.getAllTeachers();
     }
 
 

@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import uz.crm.crmbackend.dto.user.StudentShowDto;
+import uz.crm.crmbackend.dto.user.UserShowDto;
 import uz.crm.crmbackend.dto.user.UpdateProfileDataDto;
 import uz.crm.crmbackend.dto.user.UserProfileDataDto;
 import uz.crm.crmbackend.entity.File;
@@ -96,21 +96,9 @@ public class UserService {
         return ResponseEntity.status(HttpStatus.OK).body("Succcess");
     }
 
-    /**
-     * private String fullName;
-     * private String phoneNumber;
-     * private Long eduCenterId;
-     * private Long logoFileId;
-     * private String relativesPhoneNumber;
-     * private LocalDate createdAt;
-     * private String username;
-     * private String pass;
-     *
-     * @return
-     */
 
     public HttpEntity<?> getEduCenterStudent() {
-        List<StudentShowDto> res = new ArrayList<>();
+        List<UserShowDto> res = new ArrayList<>();
         for (User user : userRepo.findAllByEduCenter_IdAndIsDeleted(util.getEduCenterId(), false)) {
             boolean flag = false;
             for (UserRole userRole : user.getUserRoleSet()) {
@@ -121,10 +109,41 @@ public class UserService {
             }
 
             if (flag){
-                StudentShowDto a = new StudentShowDto();
+                UserShowDto a = new UserShowDto();
+                a.setFullName(user.getFullName());
+                a.setPhoneNumber(user.getPhoneNumber());
+                a.setRelativesPhoneNumber(user.getRelativesPhoneNumber());
+                a.setEduCenterId(user.getEduCenter().getId());
+                a.setLogoFileId(user.getLogoFile().getId());
+                a.setCreatedAt(user.getCreatedAt());
+                res.add(a);
             }
         }
+        return ResponseEntity.ok(res);
+    }
 
-        return null;
+    public HttpEntity<?> getAllTeachers() {
+        List<UserShowDto> res = new ArrayList<>();
+        for (User user : userRepo.findAllByEduCenter_IdAndIsDeleted(util.getEduCenterId(), false)) {
+            boolean flag = false;
+            for (UserRole userRole : user.getUserRoleSet()) {
+                if (userRole.getName().equals(Constant.TEACHER)){
+                    flag = true;
+                    break;
+                }
+            }
+
+            if (flag){
+                UserShowDto a = new UserShowDto();
+                a.setFullName(user.getFullName());
+                a.setPhoneNumber(user.getPhoneNumber());
+                a.setRelativesPhoneNumber(user.getRelativesPhoneNumber());
+                a.setEduCenterId(user.getEduCenter().getId());
+                a.setLogoFileId(user.getLogoFile().getId());
+                a.setCreatedAt(user.getCreatedAt());
+                res.add(a);
+            }
+        }
+        return ResponseEntity.ok(res);
     }
 }

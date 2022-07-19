@@ -7,9 +7,11 @@ import uz.crm.crmbackend.controller.AbstractController;
 import uz.crm.crmbackend.controller.CrudController;
 import uz.crm.crmbackend.dto.eduCenter.EduCenCreateDto;
 import uz.crm.crmbackend.dto.eduCenter.EduCenUpdateDto;
+import uz.crm.crmbackend.dto.eduCenter.EduCenterPageableDto;
 import uz.crm.crmbackend.service.services.EduCenterService;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -20,9 +22,6 @@ public class EduCenterController extends AbstractController<EduCenterService> im
     public EduCenterController(EduCenterService service) {
         super(service);
     }
-
-
-
 
     @PostMapping("/createEduCenter")
     @Override
@@ -95,5 +94,17 @@ public class EduCenterController extends AbstractController<EduCenterService> im
     @GetMapping("/getEducentersNameAndId")
     public HttpEntity<?> getEduCenterName(){
         return service.getEduCenterName();
+    }
+
+    @PostMapping("/deleteMultiple")
+    public HttpEntity<?> deleteMultiple(@RequestBody List<Long> ids){
+        return service.deleteMultiple(ids);
+    }
+
+
+    @PostMapping("/getPageable")
+    public HttpEntity<?> getByPageable(@RequestBody EduCenterPageableDto pageableDto){
+        return service.getPageable(pageableDto);
+
     }
 }

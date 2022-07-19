@@ -8,10 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import uz.crm.crmbackend.dto.eduCenter.EduCenCreateDto;
-import uz.crm.crmbackend.dto.eduCenter.EduCenUpdateDto;
-import uz.crm.crmbackend.dto.eduCenter.EduCenterSelectInfo;
-import uz.crm.crmbackend.dto.eduCenter.EduCenterShowDto;
+import uz.crm.crmbackend.dto.eduCenter.*;
 import uz.crm.crmbackend.entity.*;
 import uz.crm.crmbackend.exceptions.ConflictException;
 import uz.crm.crmbackend.exceptions.ResourceNotFoundException;
@@ -328,4 +325,26 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
     }
 
 
+    public HttpEntity<?> deleteMultiple(List<Long> ids) {
+        ids.forEach(id -> {
+            Optional<EduCenter> eduCenterOptional = repository.findByIdAndIsArchived(id, false);
+            if (eduCenterOptional.isPresent()) {
+                EduCenter eduCenter = eduCenterOptional.get();
+                eduCenter.setIsArchived(true);
+                repository.save(eduCenter);
+            }
+        });
+        return ResponseEntity.status(HttpStatus.OK).body("Success");
+    }
+
+    public HttpEntity<?> getPageable(EduCenterPageableDto pageableDto) {
+        System.out.println(pageableDto);
+        return ResponseEntity.status(HttpStatus.OK).body(repository.getEduCentersByPageable(
+                pageableDto.getCenterName(),
+                pageableDto.getCenterStir(),
+                pageableDto.getCeoName(),
+                pageableDto.getSize(),
+                pageableDto.getPage()
+        ));
+    }
 }

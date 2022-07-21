@@ -129,51 +129,25 @@ public class PayEduService extends AbstractService<PayEduRepo> implements BaseSe
     }
 
     public HttpEntity<?> getAllPayments() {
-        List<PayEduShowDto> res = new ArrayList<>();
+        List<PayAllEduShowDto> res = new ArrayList<>();
+        for (Long id : eduCenterRepo.getIds()) {
+            Optional<PayEdu> lastPaymentOptional = repository.findLastPayment(id);
+            if (lastPaymentOptional.isPresent()) {
+                PayEdu payEdu = lastPaymentOptional.get();
+                PayAllEduShowDto item = new PayAllEduShowDto();
 
-        eduCenterRepo.getIds().forEach(aLong -> {
-            PayEduShowDto item = new PayEduShowDto();
-            item.setEduCenterId(aLong);
-            item.setEduCenterName(eduCenterRepo.findById(aLong).orElseThrow(ResourceNotFoundException::new).getEdu_centerName());
+                item.setComment(payEdu.getComment());
+                item.setEduCenterId(id);
+                item.setAmount(payEdu.getPayAmount());
+                item.setFromDate(payEdu.getStartTime());
+                item.setToDate(payEdu.getEndTime());
+                item.setEduCenterName(eduCenterRepo.findById(id).orElseThrow(ResourceNotFoundException::new).getEdu_centerName());
 
-            List<PayEdu> all = repository.findAllByEduCenter_Id(aLong);
-            List<Pays> paysList = new ArrayList<>();
-            all.forEach(payEdu -> {
-                Pays pays = new Pays();
-                pays.setId(payEdu.getId());
-                pays.setPayAmount(payEdu.getPayAmount());
-                pays.setStartTime(payEdu.getStartTime());
-                pays.setEndTime(payEdu.getEndTime());
-                pays.setComment(payEdu.getComment());
-                paysList.add(pays);
-            });
-            item.setPaysList(paysList);
-            res.add(item);
-        });
+                res.add(item);
+            }
+        }
         return ResponseEntity.ok(res);
     }
 
-    public static void main(String[] args) {
-        List<Test> tests = new ArrayList<>(Arrays.asList(
 
-                new Test(3L, "c"),
-                new Test(2L, "b"),
-                new Test(1L, "a"),
-                new Test(4L, "d")
-        ));
-        System.out.println(tests);
-        List<Test> collect = tests.stream().sorted((o1, o2) -> o2.getId().compareTo(o1.getId())).collect(Collectors.toList());
-        System.out.println(collect);
-    }
-}
-
-
-@Setter
-@Getter
-@ToString
-@AllArgsConstructor
-@NoArgsConstructor
-class Test {
-    private Long id;
-    private String name;
 }

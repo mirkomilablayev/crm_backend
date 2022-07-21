@@ -160,22 +160,10 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
         if (eduCenterOptional.isPresent()) {
             EduCenter eduCenter = eduCenterOptional.get();
             eduCenter.setIsArchived(true);
-            User user = new User();
-            for (User user1 : userRepo.findAllByEduCenter_IdAndIsDeleted(eduCenter.getId(), false)) {
-                boolean flag = false;
-                for (UserRole userRole : user1.getUserRoleSet()) {
-                    if (userRole.getName().equals(Constant.ADMIN)) {
-                        flag = true;
-                        break;
-                    }
-                }
-                if (flag) {
-                    user = user1;
-                    break;
-                }
+            for (User user : userRepo.findAllByEduCenter_IdAndIsDeleted(eduCenter.getId(), false)) {
+                user.setIsDeleted(true);
+                userRepo.save(user);
             }
-            user.setIsDeleted(true);
-            userRepo.save(user);
             repository.save(eduCenter);
             return ResponseEntity.status(HttpStatus.OK).body("Success");
         } else {

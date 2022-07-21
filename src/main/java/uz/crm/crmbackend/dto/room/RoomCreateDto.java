@@ -15,8 +15,6 @@ import java.time.LocalDateTime;
 @ToString
 public class RoomCreateDto implements Dto {
     private String name;
-    private LocalDateTime CreatedAt;
     private String comment;
-    private Long roomCapacity;
-    private Long availableStudent;
+    private String color;
 }

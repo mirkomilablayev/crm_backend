@@ -16,9 +16,8 @@ public class RoomShowDto {
     private String name;
     private LocalDateTime CreatedAt;
     private String eduCenterName;
+    private String color;
     private Long eduCenterId;
     private String comment;
-    private Long roomCapacity;
-    private Long availableStudent;
     private Boolean isActive = true;
 }

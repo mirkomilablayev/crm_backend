@@ -9,7 +9,6 @@ import uz.crm.crmbackend.dto.room.RoomCreateDto;
 import uz.crm.crmbackend.dto.room.RoomShowDto;
 import uz.crm.crmbackend.dto.room.RoomUpdateDto;
 import uz.crm.crmbackend.entity.Room;
-import uz.crm.crmbackend.exceptions.ConflictException;
 import uz.crm.crmbackend.exceptions.ResourceAlreadyExistsException;
 import uz.crm.crmbackend.exceptions.ResourceNotFoundException;
 import uz.crm.crmbackend.repository.repositories.RoomRepo;
@@ -36,15 +35,11 @@ public class RoomService extends AbstractService<RoomRepo> implements CrudServic
         if (repository.existsByNameAndEduCenter_Id(cd.getName(), eduCenterId)) {
             Room room = new Room();
             room.setCreatedAt(LocalDateTime.now());
-            if (cd.getRoomCapacity() > 0) {
-                room.setRoomCapacity(cd.getRoomCapacity());
-            } else {
-                throw new ConflictException(room.getName() + "'s room capacity is invalid");
-            }
-
+            room.setColor(cd.getColor());
             room.setComment(cd.getComment());
             room.setEduCenter(util.getCurrentUser().getEduCenter());
             room.setIsActive(true);
+
             room.setName(cd.getName());
             Room save = repository.save(room);
             return ResponseEntity.status(HttpStatus.OK).body(save);
@@ -65,9 +60,6 @@ public class RoomService extends AbstractService<RoomRepo> implements CrudServic
             room.setComment(cd.getComment());
         }
 
-        if (cd.getRoomCapacity() != null && room.getRoomCapacity().equals(cd.getRoomCapacity()) && room.getAvailableStudent() >= cd.getRoomCapacity()) {
-            room.setRoomCapacity(cd.getRoomCapacity());
-        }
 
         Room save = repository.save(room);
         return ResponseEntity.status(HttpStatus.OK).body(save);
@@ -95,12 +87,11 @@ public class RoomService extends AbstractService<RoomRepo> implements CrudServic
         RoomShowDto res = new RoomShowDto();
         res.setComment(room.getComment());
         res.setName(room.getName());
-        res.setAvailableStudent(room.getAvailableStudent());
         res.setEduCenterId(room.getEduCenter().getId());
         res.setEduCenterName(room.getEduCenter().getEdu_centerName());
         res.setId(room.getId());
+        res.setColor(room.getColor());
         res.setIsActive(room.getIsActive());
-        res.setRoomCapacity(room.getRoomCapacity());
         res.setCreatedAt(room.getCreatedAt());
         return res;
     }

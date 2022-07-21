@@ -21,7 +21,6 @@ public class Room extends BaseEntityId implements BaseEntity {
     @ManyToOne
     private EduCenter eduCenter;
     private String comment;
-    private Long roomCapacity;
-    private Long availableStudent;
+    private String color;
     private Boolean isActive = true;
 }

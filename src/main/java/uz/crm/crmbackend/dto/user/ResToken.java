@@ -11,7 +11,6 @@ import java.util.Set;
 @NoArgsConstructor
 @ToString
 public class ResToken {
-    private String token;
     private String userName;
     private Long userId;
     private String eduCenterName;

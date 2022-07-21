@@ -52,36 +52,9 @@ public class AuthController {
         } catch (AuthenticationException e) {
             return new ResponseEntity<>("", HttpStatus.BAD_GATEWAY);
         }
-        String token = jwtProvider.generateToken(user.getUsername());
+        String token = jwtProvider.generateToken(user.getUsername(), user);
 
-        ResToken resToken = new ResToken();
-        boolean flag = false;
-        String string = "";
-        Set<String> userRolesForTokens = new HashSet<>();
-        for (UserRole userRole : user.getUserRoleSet()) {
-            if (userRole.getName().equals(Constant.SUPER_ADMIN)) {
-                flag = true;
-                string = userRole.getAuthority();
-                break;
-            }
-            string = userRole.getAuthority();
-        }
-        resToken.setToken(token);
-
-        resToken.setUserRoleSet(string);
-        resToken.setUserName(user.getFullName());
-        resToken.setUserId(user.getId());
-        if (flag) {
-            if (user.getLogoFile() != null) {
-                resToken.setImgId(user.getLogoFile().getId());
-            }
-        } else {
-            resToken.setEduCenterId(user.getEduCenter().getId());
-            resToken.setEduCenterName(user.getEduCenter().getEdu_centerName());
-        }
-
-
-        return ResponseEntity.status(HttpStatus.OK).body(resToken);
+        return ResponseEntity.status(HttpStatus.OK).body(token);
     }
 
 }

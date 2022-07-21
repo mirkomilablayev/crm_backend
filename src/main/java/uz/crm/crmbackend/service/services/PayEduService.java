@@ -1,5 +1,6 @@
 package uz.crm.crmbackend.service.services;
 
+import lombok.*;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +20,8 @@ import uz.crm.crmbackend.service.CrudService;
 import uz.crm.crmbackend.tools.Constant;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -38,31 +38,29 @@ public class PayEduService extends AbstractService<PayEduRepo> implements BaseSe
 
     @Override
     public HttpEntity<?> create(PayEduCreateDto cd) {
-        Optional<PayEdu> payEduOptional = repository.findByEduCenter_IdAndIsActiveNow(cd.getEduCenterId(), true);
+        Optional<PayEdu> payEduOptional = repository.findLastPayment(cd.getEduCenterId());
 
         if (payEduOptional.isPresent()) {
             PayEdu payEdu = payEduOptional.get();
-            if (payEdu.getEndTime().isEqual(LocalDateTime.now()) || payEdu.getEndTime().isAfter(LocalDateTime.now())) {
-                payEdu.setIsActiveNow(false);
-                repository.save(payEdu);
+            if (payEdu.getEndTime().isBefore(cd.getStartTime()) || payEdu.getEndTime().isEqual(cd.getEndTime())) {
                 EduCenter eduCenter = eduCenterRepo
                         .findByIdAndIsArchived(cd.getEduCenterId(), false)
                         .orElseThrow(ResourceNotFoundException::new);
                 eduCenter.setCenterStatus(centerStatusRepo.findByName(Constant.status1).orElseThrow(ResourceNotFoundException::new));
                 return savePayEdu(cd);
-            } else {
-                throw new ConflictException("");
-            }
+            } else
+                throw new ConflictException("Siz Kiritgan Vaqtlarda Xatoliklar Bor");
         } else {
             return savePayEdu(cd);
         }
     }
 
     private ResponseEntity<PayEdu> savePayEdu(PayEduCreateDto cd) {
-        if (cd.getEndTime().isEqual(LocalDateTime.now()) || cd.getEndTime().isAfter(LocalDateTime.now())) {
-            throw new ConflictException("");
+        if ((cd.getStartTime().isEqual(LocalDateTime.now()) || cd.getStartTime().isAfter(LocalDateTime.now())) && cd.getStartTime().isBefore(cd.getEndTime())) {
+            return ResponseEntity.status(HttpStatus.OK).body(repository.save(new PayEdu(eduCenterRepo.findByIdAndIsArchived(cd.getEduCenterId(), false).orElseThrow(ResourceNotFoundException::new), cd.getStartTime(), cd.getEndTime(), cd.getPayAmount(), cd.getComment())));
+        } else {
+            throw new ConflictException("Siz Kiritgan Vaqtlarda Xatoliklar Bor");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(repository.save(new PayEdu(eduCenterRepo.findByIdAndIsArchived(cd.getEduCenterId(), false).orElseThrow(ResourceNotFoundException::new), cd.getStartTime(), cd.getEndTime(), cd.getPayAmount(), cd.getComment())));
     }
 
     @Override
@@ -90,7 +88,7 @@ public class PayEduService extends AbstractService<PayEduRepo> implements BaseSe
         all.forEach(payEdu -> {
             Pays pays = new Pays();
             pays.setStartTime(payEdu.getStartTime());
-            pays.setStartEnd(payEdu.getEndTime());
+            pays.setEndTime(payEdu.getEndTime());
             pays.setPayAmount(payEdu.getPayAmount());
             paysList.add(pays);
         });
@@ -118,6 +116,7 @@ public class PayEduService extends AbstractService<PayEduRepo> implements BaseSe
 
     @Scheduled(fixedRate = 60 * 60 * 12 * 1000)
     public void makeUnActiveEduCenter() {
+        System.out.println("Shu funksiya ishladi");
         repository.findByIsActiveNow(true).forEach(payEdu -> {
             if (payEdu.getEndTime().isAfter(LocalDateTime.now())) {
                 EduCenter eduCenter = payEdu.getEduCenter();
@@ -130,19 +129,51 @@ public class PayEduService extends AbstractService<PayEduRepo> implements BaseSe
     }
 
     public HttpEntity<?> getAllPayments() {
-        List<PayEdu> list = repository.findByIsActiveNow(true);
-        List<PayAllEduShowDto> res = new ArrayList<>();
-        list.forEach(a -> {
-            PayAllEduShowDto item = new PayAllEduShowDto();
-            item.setAmount(a.getPayAmount());
-            item.setFromDate(a.getStartTime());
-            item.setToDate(a.getEndTime());
-            item.setEduCenterId(a.getEduCenter().getId());
-            item.setEduCenterName(a.getEduCenter().getEdu_centerName());
-            item.setId(a.getId());
-            item.setComment(a.getComment());
+        List<PayEduShowDto> res = new ArrayList<>();
+
+        eduCenterRepo.getIds().forEach(aLong -> {
+            PayEduShowDto item = new PayEduShowDto();
+            item.setEduCenterId(aLong);
+            item.setEduCenterName(eduCenterRepo.findById(aLong).orElseThrow(ResourceNotFoundException::new).getEdu_centerName());
+
+            List<PayEdu> all = repository.findAllByEduCenter_Id(aLong);
+            List<Pays> paysList = new ArrayList<>();
+            all.forEach(payEdu -> {
+                Pays pays = new Pays();
+                pays.setId(payEdu.getId());
+                pays.setPayAmount(payEdu.getPayAmount());
+                pays.setStartTime(payEdu.getStartTime());
+                pays.setEndTime(payEdu.getEndTime());
+                pays.setComment(payEdu.getComment());
+                paysList.add(pays);
+            });
+            item.setPaysList(paysList);
             res.add(item);
         });
-        return ResponseEntity.status(HttpStatus.OK).body(res);
+        return ResponseEntity.ok(res);
     }
+
+    public static void main(String[] args) {
+        List<Test> tests = new ArrayList<>(Arrays.asList(
+
+                new Test(3L, "c"),
+                new Test(2L, "b"),
+                new Test(1L, "a"),
+                new Test(4L, "d")
+        ));
+        System.out.println(tests);
+        List<Test> collect = tests.stream().sorted((o1, o2) -> o2.getId().compareTo(o1.getId())).collect(Collectors.toList());
+        System.out.println(collect);
+    }
+}
+
+
+@Setter
+@Getter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+class Test {
+    private Long id;
+    private String name;
 }

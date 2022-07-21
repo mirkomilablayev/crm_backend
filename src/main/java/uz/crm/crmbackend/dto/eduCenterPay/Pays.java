@@ -10,7 +10,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Pays {
+    private Long id;
     private Double payAmount;
     private LocalDateTime startTime;
-    private LocalDateTime startEnd;
+    private LocalDateTime endTime;
+    private String comment;
 }

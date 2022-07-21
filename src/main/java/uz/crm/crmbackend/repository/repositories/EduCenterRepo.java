@@ -28,4 +28,7 @@ public interface EduCenterRepo extends JpaRepository<EduCenter,Long> , BaseRepos
             Long size,
             Long page
     );
+
+    @Query(value = "select id from edu_center;", nativeQuery = true)
+    List<Long> getIds();
 }

@@ -46,7 +46,7 @@ public class PayEduController extends AbstractController<PayEduService> implemen
         return service.getEducationPayments(eduCenterId);
     }
 
-    @GetMapping("/getAllActivePayments")
+    @GetMapping("/getAllPayments")
     public HttpEntity<?> getAllPayments(){
         return service.getAllPayments();
     }

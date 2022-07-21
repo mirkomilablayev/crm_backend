@@ -337,14 +337,4 @@ public class EduCenterService extends AbstractService<EduCenterRepo> implements 
         return ResponseEntity.status(HttpStatus.OK).body("Success");
     }
 
-    public HttpEntity<?> getPageable(EduCenterPageableDto pageableDto) {
-        System.out.println(pageableDto);
-        return ResponseEntity.status(HttpStatus.OK).body(repository.getEduCentersByPageable(
-                pageableDto.getCenterName(),
-                pageableDto.getCenterStir(),
-                pageableDto.getCeoName(),
-                pageableDto.getSize(),
-                pageableDto.getPage()
-        ));
-    }
 }

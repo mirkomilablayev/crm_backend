@@ -102,8 +102,4 @@ public class EduCenterController extends AbstractController<EduCenterService> im
     }
 
 
-    @PostMapping("/getPageable")
-    public HttpEntity<?> getByPageable(@RequestBody EduCenterPageableDto pageableDto){
-        return service.getPageable(pageableDto);
-    }
 }

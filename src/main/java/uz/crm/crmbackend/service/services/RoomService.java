@@ -100,6 +100,7 @@ public class RoomService extends AbstractService<RoomRepo> implements CrudServic
         res.setEduCenterName(room.getEduCenter().getEdu_centerName());
         res.setId(room.getId());
         res.setIsActive(room.getIsActive());
+
         res.setRoomCapacity(room.getRoomCapacity());
         res.setCreatedAt(room.getCreatedAt());
         return res;

@@ -4,6 +4,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.crm.crmbackend.controller.AbstractController;
 import uz.crm.crmbackend.controller.CrudController;
+import uz.crm.crmbackend.dto.subject.SubjectChangeStatusDto;
 import uz.crm.crmbackend.dto.subject.SubjectCreateDto;
 import uz.crm.crmbackend.dto.subject.SubjectUpdateDto;
 import uz.crm.crmbackend.service.services.SubjectService;
@@ -11,7 +12,7 @@ import uz.crm.crmbackend.service.services.SubjectService;
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/api/subject")
-public class SubjectController extends AbstractController<SubjectService> implements CrudController<SubjectCreateDto, SubjectUpdateDto> {
+public class    SubjectController extends AbstractController<SubjectService> implements CrudController<SubjectCreateDto, SubjectUpdateDto> {
 
 
     public SubjectController(SubjectService service) {
@@ -47,9 +48,11 @@ public class SubjectController extends AbstractController<SubjectService> implem
         return service.getAllActive();
     }
 
-
     @PostMapping("/changeStatus")
-    public HttpEntity<?> changeStatus(@RequestParam Long id){
-        return service.changeStatus(id);
+    public HttpEntity<?> changeStatus(@RequestBody SubjectChangeStatusDto dto){
+        return service.changeStatus(dto);
     }
+
+
+
 }

@@ -14,9 +14,8 @@ import javax.persistence.ManyToOne;
 public class Subject extends BaseEntityId implements BaseEntity {
     private String name;
     private String comment;
+    private Boolean isActive = true;
+    private Boolean isDeleted = false;
     @ManyToOne
     private EduCenter eduCenter;
-    @ManyToOne
-    private SubjectStatus status;
-    private Boolean isActive = true;
 }

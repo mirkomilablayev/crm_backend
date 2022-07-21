@@ -13,4 +13,7 @@ public interface SubjectRepo extends JpaRepository<Subject,Long>, BaseRepository
     boolean existsByNameAndEduCenter_IdAndIsActive(String name, Long eduCenter_id, Boolean isActive);
     Optional<Subject> findByIdAndIsActive(Long id, Boolean isActive);
     List<Subject> findAllByEduCenter_IdAndIsActive(Long eduCenter_id, Boolean isActive);
+
+    Optional<Subject> findByIdAndIsDeleted(Long id, Boolean isDeleted);
+    List<Subject> findAllByEduCenter_IdAndIsDeleted(Long eduCenter_id, Boolean isDeleted);
 }
